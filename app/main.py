@@ -1,18 +1,37 @@
 #!../venv/bin/python
 # -*- coding: UTF-8 -*-
 
-from flask import Flask
+from flask import Flask, render_template
 app = Flask(__name__)
 
+posts = [
+    {
+        'autor': 'Aleksandr Tolstoy',
+        'title': 'First blog post',
+        'content': 'First post content',
+        'date': 'April 22, 2020'
 
-@app.route("/home")
-def hello():
-    return "<h1>Home Page</h1>"
+    },
+
+    {
+        'autor': 'Aleksey Redka',
+        'title': 'Second blog post',
+        'content': 'Second post content',
+        'date': 'April 23, 2020'
+
+    }
+]
 
 
-@app.route("/about")
+@app.route('/')
+@app.route('/home')
+def home():
+    return render_template('home.html', posts=posts)
+
+
+@app.route('/about')
 def about():
-    return "<h1>About Page</h1>"
+    return render_template('about.html')
 
 
 if __name__ == '__main__':
