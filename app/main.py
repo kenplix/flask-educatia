@@ -1,7 +1,7 @@
 #!../venv/bin/python
 # -*- coding: UTF-8 -*-
 
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 app = Flask(__name__)
 
 posts = [
@@ -23,7 +23,6 @@ posts = [
 ]
 
 
-@app.route('/')
 @app.route('/home')
 def home():
     return render_template('home.html', posts=posts)
