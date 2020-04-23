@@ -8,6 +8,7 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
+  <!-- Personal stylesheets -->
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
   {% if title %}
@@ -16,9 +17,9 @@
   <title>Flask Blog</title>
   {% endif %}
 
-  <title>Hello, world!</title>
 </head>
 <body>
+  <!-- Navbar -->
   <header class="site-header">
     <nav class="navbar navbar-expand-lg navbar-dark bg-steel fixed-top">
       <div class="container">
@@ -28,11 +29,12 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <!-- Left Side -->
           <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link" href="/home">Home</a>
             <a class="nav-item nav-link" href="/about">About</a>
           </div>
-
+          <!-- Right Side -->
           <div class="navbar-nav">
             <a class="nav-item nav-link" href="/login">Login</a>
             <a class="nav-item nav-link" href="/register">Register</a>
@@ -42,6 +44,7 @@
     </div>
   </header>
 
+  <!-- Sidebar -->
   <main role="main" class="container">
     <div class="row">
       <div class="col-md-8">
