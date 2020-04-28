@@ -20,10 +20,10 @@ class User(db.Model):
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
 
-    def __repr__(self):
-        return f'User({self.username}: {self.email} | {self.password})'
+    posts = db.relationship('Post', backref='author', lazy=True)
 
-# TODO : create one to many relationship
+    def __repr__(self):
+        return f'User <{self.username}: {self.email} | {self.password}>'
 
 
 class Post(db.Model):
@@ -32,8 +32,10 @@ class Post(db.Model):
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
 
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
     def __repr__(self):
-        return f'Post({self.date}: {self.title})'
+        return f'Post <{self.date}: {self.title}>'
 
 
 posts = [
