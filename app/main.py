@@ -1,11 +1,40 @@
 #!../venv/bin/python
 # -*- coding: UTF-8 -*-
 
+from datetime import datetime
+
 from flask import Flask, render_template, url_for, flash, redirect
 from forms import Registration, Login
-app = Flask(__name__)
+from flask_sqlalchemy import SQLAlchemy
 
+app = Flask(__name__)
 app.config['SECRET_KEY'] = '196e40bf26441892bd1b5ffc1093acfec6d55b73'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+db = SQLAlchemy(app)
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(25), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    password = db.Column(db.String(60), nullable=False)
+
+    def __repr__(self):
+        return f'User({self.username}: {self.email} | {self.password})'
+
+# TODO : create one to many relationship
+
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    content = db.Column(db.Text, nullable=False)
+
+    def __repr__(self):
+        return f'Post({self.date}: {self.title})'
+
 
 posts = [
     {
