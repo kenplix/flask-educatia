@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, InputRequired, Length, Email, EqualTo
+from wtforms.validators import DataRequired, InputRequired, Length, Email, EqualTo, ValidationError
+
+from app.models import User
 
 
 class Registration(FlaskForm):
@@ -16,7 +18,15 @@ class Registration(FlaskForm):
     confirm = PasswordField('Confirm Password', validators=[InputRequired()])
     submit = SubmitField('Sign Up')
 
-# Issue: After bad input dont work EquealTo
+    ERROR_MSG = 'That {} is taken. Please choose a different one'
+
+    def validate_username(self, username):
+        if User.query.filter_by(username=username.data).first():
+            raise ValidationError(Registration.ERROR_MSG.format('username'))
+
+    def validate_email(self, email):
+        if User.query.filter_by(email=email.data).first():
+            raise ValidationError(Registration.ERROR_MSG.format('email'))
 
 
 class Login(FlaskForm):
