@@ -16,6 +16,8 @@ class Registration(FlaskForm):
     confirm = PasswordField('Confirm Password', validators=[InputRequired()])
     submit = SubmitField('Sign Up')
 
+# Issue: After bad input dont work EquealTo
+
 
 class Login(FlaskForm):
     email = StringField('Email',
