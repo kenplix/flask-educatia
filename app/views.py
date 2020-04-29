@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect
 
-from flask_login import login_user
+from flask_login import login_user, current_user
 
 from app import app, db, bcrypt
 from app.forms import Registration, Login
@@ -37,6 +37,9 @@ def about():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
     form = Registration()
     if form.validate_on_submit():
         password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -52,6 +55,9 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
     form = Login()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
