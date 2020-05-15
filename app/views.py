@@ -3,7 +3,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flask_login import login_user, current_user, logout_user, login_required
 
 from app import app, db, bcrypt
-from app.forms import Registration, Login
+from app.forms import Registration, Login, UpdateProfile
 from app.models import User, Post
 
 posts = [
@@ -75,8 +75,19 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    form = UpdateProfile()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Your profile has been updated', 'success')
+        return redirect(url_for('profile'))  # PRG pattern
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+
     image_file = url_for('static', filename=f'profile_pics/{current_user.image_file}')
-    return render_template('profile.html', title='Profile', image_file=image_file)
+    return render_template('profile.html', title='Profile', image_file=image_file, form=form)
