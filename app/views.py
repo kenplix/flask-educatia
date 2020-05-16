@@ -2,7 +2,7 @@ import os
 import secrets
 from functools import partial
 
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from PIL import Image
 
@@ -76,7 +76,6 @@ def save_picture(form_picture) -> str:
     image = Image.open(form_picture)
     image.thumbnail(output_size)
     image.save(picture_path(picture_filename))
-
     return picture_filename
 
 
@@ -111,10 +110,31 @@ def new_post():
         db.session.commit()
         flash('Your post has been created', 'success')
         return redirect(url_for('home'))
-    return render_template('create_post.html', title='New Post', form=form)
+    return render_template('post_editor.html', title='New Post',
+                           form=form, legend='New Post')
 
 
-@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
+@app.route('/post/<int:post_id>')
 def post(post_id: int):
     post = Post.query.get_or_404(post_id)
     return render_template('post.html', title=post.title, post=post)
+
+
+@app.route('/post/<int:post_id>/update', methods=['GET', 'POST'])
+@login_required
+def update_post(post_id: int):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.commit()
+        flash('Your post has been updated', 'success')
+        return redirect(url_for('post', post_id=post_id))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.content.data = post.content
+    return render_template('post_editor.html', title='Update Post',
+                           form=form, legend='Update Post')
