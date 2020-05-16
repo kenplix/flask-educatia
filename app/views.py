@@ -3,6 +3,7 @@ import secrets
 
 from flask import render_template, url_for, flash, redirect, request
 from flask_login import login_user, current_user, logout_user, login_required
+from PIL import Image
 
 from app import app, db, bcrypt
 from app.forms import Registration, Login, UpdateProfile
@@ -77,13 +78,18 @@ def logout():
     return redirect(url_for('home'))
 
 
-def save_picture(form_pic) -> str:
+def save_picture(form_picture) -> str:
     random_hex = secrets.token_hex(8)
-    _, file_ext = os.path.splitext(form_pic.filename)
-    pic_file = random_hex + file_ext
-    pic_path = os.path.join(app.root_path, 'static/profile_pics', pic_file)
-    form_pic.save(pic_path)
-    return pic_file
+    _, file_ext = os.path.splitext(form_picture.filename)
+    picture_filename = random_hex + file_ext
+    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_filename)
+
+    output_size = (125, 125)
+    image = Image.open(form_picture)
+    image.thumbnail(output_size)
+    image.save(picture_path)
+
+    return picture_filename
 
 
 @app.route('/profile', methods=['GET', 'POST'])
