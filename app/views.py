@@ -91,7 +91,7 @@ def profile():
         current_user.email = form.email.data
         db.session.commit()
         flash('Your profile has been updated', 'success')
-        return redirect(url_for('profile'))  # PRG pattern
+        return redirect(url_for('profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
@@ -100,9 +100,15 @@ def profile():
     return render_template('profile.html', title='Profile', image_file=image_file, form=form)
 
 
-@app.route('/post/new', methods=['GET', 'POST'])
+@app.route('/post/<int:post_id>')
+def post(post_id: int):
+    post = Post.query.get_or_404(post_id)
+    return render_template('post.html', title=post.title, post=post)
+
+
+@app.route('/post/create', methods=['GET', 'POST'])
 @login_required
-def new_post():
+def create_post():
     form = PostForm()
     if form.validate_on_submit():
         post = Post(title=form.title.data, content=form.content.data, author=current_user)
@@ -112,12 +118,6 @@ def new_post():
         return redirect(url_for('home'))
     return render_template('post_editor.html', title='New Post',
                            form=form, legend='New Post')
-
-
-@app.route('/post/<int:post_id>')
-def post(post_id: int):
-    post = Post.query.get_or_404(post_id)
-    return render_template('post.html', title=post.title, post=post)
 
 
 @app.route('/post/<int:post_id>/update', methods=['GET', 'POST'])
@@ -138,3 +138,15 @@ def update_post(post_id: int):
         form.content.data = post.content
     return render_template('post_editor.html', title='Update Post',
                            form=form, legend='Update Post')
+
+
+@app.route('/post/<int:post_id>/delete', methods=['POST'])
+@login_required
+def delete_post(post_id: int):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted', 'success')
+    return redirect(url_for('home'))
