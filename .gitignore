@@ -1,10 +1,9 @@
 .*
-!.gitignore
 
-venv
-__pycache__
+venv/
+__pycache__/
 
-profile_pics/*
-!default.jpg
+app/static/profile_pics/*
+!app/static/profile_pics/default.jpg
 
 *.db
