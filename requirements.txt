@@ -12,6 +12,7 @@ idna==2.9
 itsdangerous==1.1.0
 Jinja2==2.11.2
 MarkupSafe==1.1.1
+Pillow==7.1.2
 pycparser==2.20
 six==1.14.0
 SQLAlchemy==1.3.16
