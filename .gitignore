@@ -1,0 +1,10 @@
+.*
+!.gitignore
+
+venv
+__pycache__
+
+profile_pics/*
+!default.jpg
+
+*.db
