@@ -7,7 +7,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from PIL import Image
 
 from app import app, db, bcrypt
-from app.forms import Registration, Login, UpdateProfile
+from app.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostForm
 from app.models import User, Post
 
 posts = [
@@ -44,7 +44,7 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
 
-    form = Registration()
+    form = RegistrationForm()
     if form.validate_on_submit():
         password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(username=form.username.data,
@@ -62,7 +62,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
 
-    form = Login()
+    form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
@@ -99,7 +99,7 @@ def save_picture(form_picture) -> str:
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    form = UpdateProfile()
+    form = UpdateProfileForm()
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
@@ -115,3 +115,13 @@ def profile():
 
     image_file = url_for('static', filename=f'profile_pics/{current_user.image_file}')
     return render_template('profile.html', title='Profile', image_file=image_file, form=form)
+
+
+@app.route('/post/new', methods=['GET', 'POST'])
+@login_required
+def new_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        flash('Your post has been created', 'success')
+        return redirect(url_for('home'))
+    return render_template('create_post.html', title='New Post', form=form)

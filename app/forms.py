@@ -1,13 +1,15 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, InputRequired, Length, Email, EqualTo, ValidationError
 from flask_login import current_user
 
 from app.models import User
 
+BAD_VALIDATION = 'That {} is taken. Please choose a different one'
 
-class Registration(FlaskForm):
+
+class RegistrationForm(FlaskForm):
     username = StringField('Username',
                            validators=[DataRequired(),
                                        Length(min=3, max=25)])
@@ -20,18 +22,16 @@ class Registration(FlaskForm):
     confirm = PasswordField('Confirm Password', validators=[InputRequired()])
     submit = SubmitField('Sign Up')
 
-    ERROR_MSG = 'That {} is taken. Please choose a different one'
-
     def validate_username(self, username):
         if User.query.filter_by(username=username.data).first():
-            raise ValidationError(Registration.ERROR_MSG.format('username'))
+            raise ValidationError(BAD_VALIDATION.format('username'))
 
     def validate_email(self, email):
         if User.query.filter_by(email=email.data).first():
-            raise ValidationError(Registration.ERROR_MSG.format('email'))
+            raise ValidationError(BAD_VALIDATION.format('email'))
 
 
-class Login(FlaskForm):
+class LoginForm(FlaskForm):
     email = StringField('Email',
                         validators=[DataRequired(),
                                     Email()])
@@ -41,7 +41,7 @@ class Login(FlaskForm):
     submit = SubmitField('Sign In')
 
 
-class UpdateProfile(FlaskForm):
+class UpdateProfileForm(FlaskForm):
     username = StringField('Username',
                            validators=[DataRequired(),
                                        Length(min=3, max=25)])
@@ -50,17 +50,20 @@ class UpdateProfile(FlaskForm):
                                     Email()])
     picture = FileField('Update Profile Picture',
                         validators=[FileAllowed(['jpg', 'png'])])
-
     submit = SubmitField('Update')
-
-    ERROR_MSG = 'That {} is taken. Please choose a different one'
 
     def validate_username(self, username):
         if username.data != current_user.username:
             if User.query.filter_by(username=username.data).first():
-                raise ValidationError(Registration.ERROR_MSG.format('username'))
+                raise ValidationError(BAD_VALIDATION.format('username'))
 
     def validate_email(self, email):
         if email.data != current_user.email:
             if User.query.filter_by(email=email.data).first():
-                raise ValidationError(Registration.ERROR_MSG.format('email'))
+                raise ValidationError(BAD_VALIDATION.format('email'))
+
+
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    submit = SubmitField('Post')

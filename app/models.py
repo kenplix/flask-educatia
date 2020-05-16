@@ -20,7 +20,7 @@ class User(db.Model, UserMixin):
     posts = db.relationship('Post', backref='author', lazy=True)
 
     def __repr__(self):
-        return f'User <{self.username}: {self.email} | {self.password}>'
+        return f'User <{self.username}: {self.email}>'
 
 
 class Post(db.Model):
