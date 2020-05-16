@@ -10,27 +10,10 @@ from app import app, db, bcrypt
 from app.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostForm
 from app.models import User, Post
 
-posts = [
-    {
-        'autor': 'Aleksandr Tolstoy',
-        'title': 'First blog post',
-        'content': 'First post content',
-        'date': 'April 22, 2020'
-
-    },
-
-    {
-        'autor': 'Aleksey Redka',
-        'title': 'Second blog post',
-        'content': 'Second post content',
-        'date': 'April 23, 2020'
-
-    }
-]
-
 
 @app.route('/home')
 def home():
+    posts = Post.query.all()
     return render_template('home.html', posts=posts)
 
 
@@ -122,6 +105,9 @@ def profile():
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
+        post = Post(title=form.title.data, content=form.content.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
         flash('Your post has been created', 'success')
         return redirect(url_for('home'))
     return render_template('create_post.html', title='New Post', form=form)
