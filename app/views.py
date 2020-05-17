@@ -14,7 +14,7 @@ from app.models import User, Post
 @app.route('/home')
 def home():
     page = request.args.get('page', 1, type=int)
-    posts = Post.query.paginate(page=page, per_page=2)
+    posts = Post.query.order_by(Post.date.desc()).paginate(page=page, per_page=5)
     return render_template('home.html', posts=posts)
 
 
