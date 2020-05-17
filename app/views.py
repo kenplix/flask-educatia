@@ -39,7 +39,7 @@ def register():
         login_user(user)
         flash(f'Your account has been created!', 'success')
         return redirect(url_for('home'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('register.html', form=form, title='Register')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -55,7 +55,7 @@ def login():
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         flash('Login unsuccessful. Please check email and password', 'danger')
-    return render_template('login.html', title='Login', form=form)
+    return render_template('login.html', form=form, title='Login')
 
 
 @app.route('/logout')
@@ -98,13 +98,14 @@ def profile():
         form.email.data = current_user.email
 
     image_file = url_for('static', filename=f'profile_pics/{current_user.image_file}')
-    return render_template('profile.html', title='Profile', image_file=image_file, form=form)
+    return render_template('profile.html', form=form,
+                           title='Profile', image_file=image_file)
 
 
 @app.route('/post/<int:post_id>')
 def post(post_id: int):
     post = Post.query.get_or_404(post_id)
-    return render_template('post.html', title=post.title, post=post)
+    return render_template('post.html', post=post, title=post.title)
 
 
 @app.route('/post/create', methods=['GET', 'POST'])
@@ -117,8 +118,8 @@ def create_post():
         db.session.commit()
         flash('Your post has been created', 'success')
         return redirect(url_for('home'))
-    return render_template('post_editor.html', title='New Post',
-                           form=form, legend='New Post')
+    return render_template('post_editor.html', form=form,
+                           title='New Post', legend='New Post')
 
 
 @app.route('/post/<int:post_id>/update', methods=['GET', 'POST'])
@@ -137,8 +138,8 @@ def update_post(post_id: int):
     elif request.method == 'GET':
         form.title.data = post.title
         form.content.data = post.content
-    return render_template('post_editor.html', title='Update Post',
-                           form=form, legend='Update Post')
+    return render_template('post_editor.html', form=form,
+                           title='Update Post', legend='Update Post')
 
 
 @app.route('/post/<int:post_id>/delete', methods=['POST'])
@@ -151,3 +152,13 @@ def delete_post(post_id: int):
     db.session.commit()
     flash('Your post has been deleted', 'success')
     return redirect(url_for('home'))
+
+
+@app.route('/user/<string:username>')
+def user_posts(username: str):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = Post.query.filter_by(author=user)\
+        .order_by(Post.date.desc())\
+        .paginate(page=page, per_page=5)
+    return render_template('user_posts.html', posts=posts, user=user)
