@@ -7,3 +7,4 @@ app/static/profile_pics/*
 !app/static/profile_pics/default.jpg
 
 *.db
+*.env
