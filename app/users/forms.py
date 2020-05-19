@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
-from wtforms.validators import DataRequired, InputRequired, Length, Email, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flask_login import current_user
 
 from app.models import User
@@ -17,9 +17,9 @@ class RegistrationForm(FlaskForm):
                         validators=[DataRequired(),
                                     Email()])
     password = PasswordField('Password',
-                             validators=[InputRequired(),
+                             validators=[DataRequired(),
                                          EqualTo('confirm', message='Passwords must match')])
-    confirm = PasswordField('Confirm Password', validators=[InputRequired()])
+    confirm = PasswordField('Confirm Password', validators=[DataRequired()])
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
@@ -36,7 +36,7 @@ class LoginForm(FlaskForm):
                         validators=[DataRequired(),
                                     Email()])
     password = PasswordField('Password',
-                             validators=[InputRequired()])
+                             validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
@@ -63,12 +63,6 @@ class UpdateProfileForm(FlaskForm):
                 raise ValidationError(BAD_VALIDATION.format('email'))
 
 
-class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Post')
-
-
 class RequestResetForm(FlaskForm):
     email = StringField('Email',
                         validators=[DataRequired(),
@@ -82,7 +76,7 @@ class RequestResetForm(FlaskForm):
 
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('New Password',
-                             validators=[InputRequired(),
+                             validators=[DataRequired(),
                                          EqualTo('confirm', message='Passwords must match')])
-    confirm = PasswordField('Confirm New Password', validators=[InputRequired()])
+    confirm = PasswordField('Confirm New Password', validators=[DataRequired()])
     submit = SubmitField('Reset Password')

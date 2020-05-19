@@ -4,52 +4,47 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
   <!-- Personal stylesheets -->
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-
   {% if title %}
   <title>Flask Blog - {{ title }}</title>
   {% else %}
   <title>Flask Blog</title>
   {% endif %}
-
 </head>
 <body>
   <!-- Navbar -->
   <header class="site-header">
     <nav class="navbar navbar-expand-lg navbar-dark bg-steel fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="{{ url_for('home') }}">Flask Blog</a>
+        <a class="navbar-brand" href="{{ url_for('main.home') }}">Flask Blog</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <!-- Left Side -->
           <div class="navbar-nav mr-auto">
-            <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
-            <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>
+            <a class="nav-item nav-link" href="{{ url_for('main.home') }}">Home</a>
+            <a class="nav-item nav-link" href="{{ url_for('main.about') }}">About</a>
           </div>
           <!-- Right Side -->
           <div class="navbar-nav">
             {% if current_user.is_authenticated %}
-              <a class="nav-item nav-link" href="{{ url_for('create_post') }}">New Post</a>
-              <a class="nav-item nav-link" href="{{ url_for('profile') }}">{{ current_user.username }}</a>
-              <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+              <a class="nav-item nav-link" href="{{ url_for('posts.create_post') }}">New Post</a>
+              <a class="nav-item nav-link" href="{{ url_for('users.profile') }}">{{ current_user.username }}</a>
+              <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">Logout</a>
             {% else %}
-              <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-              <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+              <a class="nav-item nav-link" href="{{ url_for('users.login') }}">Login</a>
+              <a class="nav-item nav-link" href="{{ url_for('users.register') }}">Register</a>
             {% endif %}
           </div>
         </div>
       </nav>
     </div>
   </header>
-
+  <!-- Main -->
   <main role="main" class="container">
     <div class="row">
       <div class="col-md-8">
@@ -64,7 +59,6 @@
         {% endwith %}
         {% block content %}{% endblock %}
         </div>
-
       <!-- Sidebar -->
       <div class="col-md-4">
         <div class="content-section">
@@ -81,7 +75,6 @@
       </div>
     </div>
   </main>
-
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
