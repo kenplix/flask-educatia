@@ -3,15 +3,15 @@ import secrets
 from functools import partial
 
 from PIL import Image
-from flask import url_for
+from flask import url_for, current_app
 from flask_login import current_user
 from flask_mail import Message
 
-from app import app, mail
+from app import mail
 
 
 def save_picture(form_picture) -> str:
-    picture_path = partial(os.path.join, app.root_path, 'static/profile_pics')
+    picture_path = partial(os.path.join, current_app.root_path, 'static/profile_pics')
     if current_user.image_file != 'default.jpg':
         os.remove(picture_path(current_user.image_file))
 
