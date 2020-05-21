@@ -26,7 +26,12 @@ def register():
         login_user(user)
         flash(f'Your account has been created', 'success')
         return redirect(url_for('main.home'))
-    return render_template('users/register.html', form=form, title='Register')
+
+    context = {
+        'form': form,
+        'title': 'Register'
+    }
+    return render_template('users/register.html', **context)
 
 
 @users.route('/login', methods=['GET', 'POST'])
@@ -42,7 +47,12 @@ def login():
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('main.home'))
         flash('Login unsuccessful. Please check email and password', 'danger')
-    return render_template('users/login.html', form=form, title='Login')
+
+    context = {
+        'form': form,
+        'title': 'Login'
+    }
+    return render_template('users/login.html', **context)
 
 
 @users.route('/logout')
@@ -68,9 +78,14 @@ def profile():
         form.username.data = current_user.username
         form.email.data = current_user.email
 
-    image_file = url_for('static', filename=f'profile_pics/{current_user.image_file}')
-    return render_template('users/profile.html', form=form,
-                           title='Profile', image_file=image_file)
+    image_file = url_for('static',
+                         filename=f'profile_pics/{current_user.image_file}')
+    context = {
+        'form': form,
+        'title': 'Profile',
+        'image_file': image_file
+    }
+    return render_template('users/profile.html', **context)
 
 
 @users.route('/users/<string:username>')
@@ -80,7 +95,7 @@ def user_posts(username: str):
     posts = Post.query.filter_by(author=user)\
         .order_by(Post.date.desc())\
         .paginate(page=page, per_page=5)
-    return render_template('users/user_posts.html', posts=posts, user=user)
+    return render_template('users/user_posts.html', user=users, posts=posts)
 
 
 @users.route('/reset_password', methods=['GET', 'POST'])
@@ -94,7 +109,12 @@ def reset_request():
         send_reset_email(user)
         flash('An email has been send with instructions to reset your password', 'info')
         return redirect(url_for('users.login'))
-    return render_template('users/reset_request.html', form=form, title='Reset Password')
+
+    context = {
+        'form': form,
+        'title': 'Reset Password'
+    }
+    return render_template('users/reset_request.html', **context)
 
 
 @users.route('/reset_password/<string:token>', methods=['GET', 'POST'])
@@ -114,4 +134,9 @@ def reset_token(token: str):
         db.session.commit()
         flash('Your password has been changed. You are now able to sign in', 'success')
         return redirect(url_for('users.login'))
-    return render_template('users/reset_token.html', form=form, title='Reset Password')
+
+    context = {
+        'form': form,
+        'title': 'Reset Password'
+    }
+    return render_template('users/reset_token.html', **context)

@@ -20,13 +20,20 @@ def post(post_id: int):
 def create_post():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(title=form.title.data, content=form.content.data, author=current_user)
+        post = Post(title=form.title.data,
+                    content=form.content.data,
+                    author=current_user)
         db.session.add(post)
         db.session.commit()
         flash('Your posts has been created', 'success')
         return redirect(url_for('main.home'))
-    return render_template('posts/post_editor.html', form=form,
-                           title='New Post', legend='New Post')
+
+    context = {
+        'form': form,
+        'title': 'New Post',
+        'legend': 'New Post'
+    }
+    return render_template('posts/post_editor.html', **context)
 
 
 @posts.route('/posts/<int:post_id>/update', methods=['GET', 'POST'])
@@ -45,8 +52,13 @@ def update_post(post_id: int):
     elif request.method == 'GET':
         form.title.data = post.title
         form.content.data = post.content
-    return render_template('posts/post_editor.html', form=form,
-                           title='Update Post', legend='Update Post')
+
+    context = {
+        'form': form,
+        'title': 'Update Post',
+        'legend': 'Update Post'
+    }
+    return render_template('posts/post_editor.html', **context)
 
 
 @posts.route('/posts/<int:post_id>/delete', methods=['POST'])
