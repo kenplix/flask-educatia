@@ -35,7 +35,7 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
 
     def __repr__(self):
-        return f'User <{self.username}: {self.email}>'
+        return f'User #{self.id} <{self.username}: {self.email}>'
 
 
 class Post(db.Model):
@@ -46,4 +46,12 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return f'Post <{self.date}: {self.title}>'
+        return f'Post #{self.id} <{self.date}: {self.title}>'
+
+
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+
+    def __repr__(self):
+        return f'Tag #{self.id} <{self.name}>'
