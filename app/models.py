@@ -19,6 +19,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
+
     posts = db.relationship('Post', backref='author', lazy=True)
 
     def reset_token(self, expires_sec: int = 1800) -> str:
@@ -38,12 +39,21 @@ class User(db.Model, UserMixin):
         return f'User #{self.id} <{self.username}: {self.email}>'
 
 
+PostTag = db.Table('post_tag',
+                   db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
+                   db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')))
+
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
+
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    tags = db.relationship('Tag', secondary=PostTag, backref=db.backref('posts',
+                                                                        lazy=True))
 
     def __repr__(self):
         return f'Post #{self.id} <{self.date}: {self.title}>'
