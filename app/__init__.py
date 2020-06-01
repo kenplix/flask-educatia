@@ -26,6 +26,10 @@ def create_app(config_class=Config):
     login_manager.init_app(app)
     mail.init_app(app)
 
+    @app.cli.command()
+    def createdb():
+        db.create_all()
+
     from app.main.routes import main
     from app.users.routes import users
     from app.posts.routes import posts
