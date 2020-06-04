@@ -10,16 +10,29 @@ BAD_VALIDATION = 'That {} is taken. Please choose a different one'
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Username',
-                           validators=[DataRequired(),
-                                       Length(min=3, max=25)])
-    email = StringField('Email',
-                        validators=[DataRequired(),
-                                    Email()])
-    password = PasswordField('Password',
-                             validators=[DataRequired(),
-                                         EqualTo('confirm', message='Passwords must match')])
-    confirm = PasswordField('Confirm Password', validators=[DataRequired()])
+    username = StringField(
+        'Username',
+        validators=[DataRequired(),
+                    Length(min=3, max=25)]
+    )
+
+    email = StringField(
+        'Email',
+        validators=[DataRequired(),
+                    Email()]
+    )
+
+    password = PasswordField(
+        'Password',
+        validators=[DataRequired(),
+                    EqualTo('confirm', message='Passwords must match')]
+    )
+
+    confirm = PasswordField(
+        'Confirm Password',
+        validators=[DataRequired()]
+    )
+
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
@@ -32,24 +45,39 @@ class RegistrationForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    email = StringField('Email',
-                        validators=[DataRequired(),
-                                    Email()])
-    password = PasswordField('Password',
-                             validators=[DataRequired()])
+    email = StringField(
+        'Email',
+        validators=[DataRequired(),
+                    Email()]
+    )
+
+    password = PasswordField(
+        'Password',
+        validators=[DataRequired()]
+    )
+
     remember = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
 
 class UpdateProfileForm(FlaskForm):
-    username = StringField('Username',
-                           validators=[DataRequired(),
-                                       Length(min=3, max=25)])
-    email = StringField('Email',
-                        validators=[DataRequired(),
-                                    Email()])
-    picture = FileField('Update Profile Picture',
-                        validators=[FileAllowed(['jpg', 'png'])])
+    username = StringField(
+        'Username',
+        validators=[DataRequired(),
+                    Length(min=3, max=25)]
+    )
+
+    email = StringField(
+        'Email',
+        validators=[DataRequired(),
+                    Email()]
+    )
+
+    picture = FileField(
+        'Update Profile Picture',
+        validators=[FileAllowed(['jpg', 'png'])]
+    )
+
     submit = SubmitField('Update')
 
     def validate_username(self, username):
@@ -64,9 +92,12 @@ class UpdateProfileForm(FlaskForm):
 
 
 class RequestResetForm(FlaskForm):
-    email = StringField('Email',
-                        validators=[DataRequired(),
-                                    Email()])
+    email = StringField(
+        'Email',
+        validators=[DataRequired(),
+                    Email()]
+    )
+
     submit = SubmitField('Request Password Reset')
 
     def validate_email(self, email):
@@ -75,8 +106,15 @@ class RequestResetForm(FlaskForm):
 
 
 class ResetPasswordForm(FlaskForm):
-    password = PasswordField('New Password',
-                             validators=[DataRequired(),
-                                         EqualTo('confirm', message='Passwords must match')])
-    confirm = PasswordField('Confirm New Password', validators=[DataRequired()])
+    password = PasswordField(
+        'New Password',
+        validators=[DataRequired(),
+                    EqualTo('confirm', message='Passwords must match')]
+    )
+
+    confirm = PasswordField(
+        'Confirm New Password',
+        validators=[DataRequired()]
+    )
+
     submit = SubmitField('Reset Password')
