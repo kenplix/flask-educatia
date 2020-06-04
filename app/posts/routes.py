@@ -1,9 +1,11 @@
+from typing import Iterable
+
 from flask import (render_template, url_for, flash,
                    redirect, request, abort, Blueprint)
 from flask_login import current_user, login_required
 
 from app import db
-from app.models import Post
+from app.models import Post, Tag
 from app.posts.forms import PostForm
 
 posts = Blueprint('posts', __name__)
@@ -15,6 +17,14 @@ def post(post_id: int):
     return render_template('posts/post.html', post=post, title=post.title)
 
 
+def make_tags(data: str, delimiter: str = ',') -> Iterable[Tag]:
+    for name in data.split(delimiter):
+        if tag := Tag.query.filter_by(name=name).first():
+            yield tag
+        else:
+            yield Tag(name=name)
+
+
 @posts.route('/posts/create', methods=['GET', 'POST'])
 @login_required
 def create_post():
@@ -23,6 +33,10 @@ def create_post():
         post = Post(title=form.title.data,
                     content=form.content.data,
                     author=current_user)
+        tags = [tag for tag in make_tags(form.tags.data)]
+        post.tags.extend(tags)
+
+        db.session.add_all(tags)
         db.session.add(post)
         db.session.commit()
         flash('Your posts has been created', 'success')
@@ -46,12 +60,16 @@ def update_post(post_id: int):
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
+        tags = [tag for tag in make_tags(form.tags.data)]
+        post.tags.clear()
+        post.tags.extend(tags)
         db.session.commit()
         flash('Your posts has been updated', 'success')
         return redirect(url_for('posts.post', post_id=post_id))
     elif request.method == 'GET':
         form.title.data = post.title
         form.content.data = post.content
+        form.tags.data = ','.join([tag.name for tag in post.tags])
 
     context = {
         'form': form,

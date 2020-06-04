@@ -10,28 +10,42 @@
       <div class="form-group">
         {{ form.title.label(class="form-control-label") }}
         {% if form.title.errors %}
-        {{ form.title(class="form-control form-control-lg is-invalid") }}
-        <div class="invalid-feedback">
-          {% for error in form.title.errors %}
-          <span>{{ error }}</span>
-          {% endfor %}
-        </div>
+          {{ form.title(class="form-control form-control-lg is-invalid") }}
+          <div class="invalid-feedback">
+            {% for error in form.title.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
         {% else %}
-        {{ form.title(class="form-control form-control-lg") }}
+          {{ form.title(class="form-control form-control-lg") }}
         {% endif %}
       </div>
       <!-- Content -->
       <div class="form-group">
         {{ form.content.label(class="form-control-label") }}
         {% if form.content.errors %}
-        {{ form.content(class="form-control form-control-lg is-invalid") }}
-        <div class="invalid-feedback">
-          {% for error in form.content.errors %}
-          <span>{{ error }}</span>
-          {% endfor %}
-        </div>
+          {{ form.content(class="form-control form-control-lg is-invalid") }}
+          <div class="invalid-feedback">
+            {% for error in form.content.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
         {% else %}
-        {{ form.content(class="form-control form-control-lg") }}
+          {{ form.content(class="form-control form-control-lg") }}
+        {% endif %}
+      </div>
+      <!-- Tags -->
+      <div class="form-group">
+        {{ form.tags.label(class="form-control-label") }}
+        {% if form.tags.errors %}
+          {{ form.tags(class="form-control form-control-lg is-invalid") }}
+          <div class="invalid-feedback">
+            {% for error in form.tags.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          {{ form.tags(class="form-control form-control-lg") }}
         {% endif %}
       </div>
     </fieldset>
