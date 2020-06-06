@@ -45,7 +45,7 @@ class User(db.Model, UserMixin):
     posts = db.relationship(
         'Post',
         backref='author',
-        lazy=True
+        lazy='dynamic'
     )
 
     def reset_token(self, expires_sec: int = 1800) -> str:
@@ -77,7 +77,8 @@ PostTag = db.Table(
     db.Column(
         'tag_id',
         db.Integer,
-        db.ForeignKey('tag.id')))
+        db.ForeignKey('tag.id'))
+)
 
 
 class Post(db.Model):
@@ -111,7 +112,8 @@ class Post(db.Model):
     tags = db.relationship(
         'Tag',
         secondary=PostTag,
-        backref=db.backref('posts', lazy=True)
+        backref=db.backref('posts', lazy='dynamic'),
+        lazy=True
     )
 
     def __repr__(self):
