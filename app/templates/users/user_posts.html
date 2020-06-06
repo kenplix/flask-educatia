@@ -10,7 +10,7 @@
           <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
           <small class="text-muted">{{ post.date.strftime('%Y-%m-%d') }}</small>
           {% for tag in post.tags %}
-            <a href="#" class="badge badge-secondary">{{ tag.name }}</a>
+            <a href="{{ url_for('posts.tag', tag_id=tag.id) }}" class="badge badge-secondary">{{ tag.name }}</a>
           {% endfor %}
         </div>
         <h2>
