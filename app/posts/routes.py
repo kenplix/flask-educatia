@@ -17,8 +17,18 @@ def post(post_id: int):
     return render_template('posts/post.html', post=post, title=post.title)
 
 
+@posts.route('/tag/<int:tag_id>')
+def tag(tag_id: int):
+    page = request.args.get('page', 1, type=int)
+    tag = Tag.query.get_or_404(tag_id)
+    posts = tag.posts.order_by(Post.date.desc())\
+        .paginate(page=page, per_page=5)
+    return render_template('main/home.html', posts=posts)
+
+
 def make_tags(data: str, delimiter: str = ',') -> Iterable[Tag]:
-    for name in data.split(delimiter):
+    tags = map(lambda name: name.strip(), data.split(delimiter))
+    for name in tags:
         if tag := Tag.query.filter_by(name=name).first():
             yield tag
         else:
@@ -60,16 +70,15 @@ def update_post(post_id: int):
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
-        tags = [tag for tag in make_tags(form.tags.data)]
         post.tags.clear()
-        post.tags.extend(tags)
+        post.tags.extend(tag for tag in make_tags(form.tags.data))
         db.session.commit()
         flash('Your posts has been updated', 'success')
         return redirect(url_for('posts.post', post_id=post_id))
     elif request.method == 'GET':
         form.title.data = post.title
         form.content.data = post.content
-        form.tags.data = ','.join([tag.name for tag in post.tags])
+        form.tags.data = ', '.join([tag.name for tag in post.tags])
 
     context = {
         'form': form,
