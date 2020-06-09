@@ -9,9 +9,9 @@
   <!-- Personal stylesheets -->
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
   {% if title %}
-  <title>Flask Blog - {{ title }}</title>
+  <title>Educatia - {{ title }}</title>
   {% else %}
-  <title>Flask Blog</title>
+  <title>Educatia</title>
   {% endif %}
 </head>
 <body>
@@ -19,7 +19,7 @@
   <header class="site-header">
     <nav class="navbar navbar-expand-lg navbar-dark bg-steel fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="{{ url_for('main.home') }}">Flask Blog</a>
+        <a class="navbar-brand" href="{{ url_for('main.home') }}">Educatia</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -28,8 +28,8 @@
           <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link" href="{{ url_for('main.home') }}">Home</a>
             <a class="nav-item nav-link" href="{{ url_for('main.about') }}">About</a>
-            <form class="form-inline">
-              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <form class="form-inline", method="GET">
+              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query" value="{{ request.args.get('query', '') }}">
               <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
           </div>
