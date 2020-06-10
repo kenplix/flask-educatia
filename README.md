@@ -1,5 +1,5 @@
 # Description
-My blog engine written on Flask
+Education platform for students and tutors written on Flask
 
 # How to run?
 1. Clone or download this repository  
