@@ -13,6 +13,23 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
+UserRole = db.Table(
+    'user_role',
+
+    db.Column(
+        'user_id',
+        db.Integer,
+        db.ForeignKey('role.id')
+    ),
+
+    db.Column(
+        'role_id',
+        db.Integer,
+        db.ForeignKey('user.id')
+    )
+)
+
+
 class User(db.Model, UserMixin):
     id = db.Column(
         db.Integer,
@@ -48,6 +65,13 @@ class User(db.Model, UserMixin):
         lazy='dynamic'
     )
 
+    roles = db.relationship(
+        'Role',
+        secondary=UserRole,
+        backref=db.backref('users', lazy='dynamic'),
+        lazy=True
+    )
+
     def reset_token(self, expires_sec: int = 1800) -> str:
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
         return s.dumps({'user_id': self.id}).decode('utf-8')
@@ -65,6 +89,24 @@ class User(db.Model, UserMixin):
         return f'User #{self.id} <{self.username}: {self.email}>'
 
 
+class Role(db.Model):
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    name = db.Column(
+        db.String(50),
+        unique=True,
+        nullable=False
+    )
+
+    description = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+
 PostTag = db.Table(
     'post_tag',
 
@@ -77,7 +119,8 @@ PostTag = db.Table(
     db.Column(
         'tag_id',
         db.Integer,
-        db.ForeignKey('tag.id'))
+        db.ForeignKey('tag.id')
+    )
 )
 
 
