@@ -106,6 +106,9 @@ class Role(db.Model):
         nullable=False
     )
 
+    def __repr__(self):
+        return f'Role #{self.id} <{self.name}: {self.description}>'
+
 
 PostTag = db.Table(
     'post_tag',
