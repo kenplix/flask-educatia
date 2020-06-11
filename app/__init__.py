@@ -16,7 +16,7 @@ login_manager = LoginManager()
 login_manager.login_message_category = 'info'
 login_manager.login_view = 'users.login'
 mail = Mail()
-admin = Admin()
+admin = Admin(name='Educatia')
 
 
 def create_app(config_class=Config):
@@ -34,16 +34,15 @@ def create_app(config_class=Config):
     def createdb():
         db.create_all()
 
-    from app.models import Post, Tag
-    admin.add_view(ModelView(Post, db.session))
-    admin.add_view(ModelView(Tag, db.session))
+    from app.models import Role, Post, Tag
+    for model in Role, Post, Tag:
+        admin.add_view(ModelView(model, db.session))
 
     from app.main.routes import main
     from app.users.routes import users
     from app.posts.routes import posts
     from app.errors.handlers import errors
-    app.register_blueprint(main)
-    app.register_blueprint(users)
-    app.register_blueprint(posts)
-    app.register_blueprint(errors)
+    for blueprint in main, users, posts, errors:
+        app.register_blueprint(blueprint)
+
     return app
