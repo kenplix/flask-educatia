@@ -5,9 +5,9 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
 
 from app.config import Config
+from app.admin import AdminView, HomeAdminView
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -16,12 +16,16 @@ login_manager = LoginManager()
 login_manager.login_message_category = 'info'
 login_manager.login_view = 'users.login'
 mail = Mail()
-admin = Admin()
+admin = Admin(
+    url='/',
+    name='Educatia',
+    index_view=HomeAdminView()
+)
 
 
-def create_app(config_class=Config):
+def create_app(config_cls=Config):
     app = Flask(__name__)
-    app.config.from_object(config_class)
+    app.config.from_object(config_cls)
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -31,19 +35,36 @@ def create_app(config_class=Config):
     admin.init_app(app)
 
     @app.cli.command()
-    def createdb():
+    def init_db():
         db.create_all()
 
-    from app.models import Post, Tag
-    admin.add_view(ModelView(Post, db.session))
-    admin.add_view(ModelView(Tag, db.session))
+    from app.models import User, Role, Post, Tag
+
+    @app.cli.command()
+    def create_admin():
+        admin = User(
+            username=app.config['ADMIN_USERNAME'],
+            email=app.config['ADMIN_EMAIL'],
+            password=app.config['ADMIN_PASSWORD']
+        )
+        role = Role(
+            name='Admin',
+            description='Site administrator'
+        )
+        db.session.add_all((admin, role))
+        db.session.commit()
+        admin.roles.append(role)
+        db.session.add(admin)
+        db.session.commit()
+
+    for model in Role, Post, Tag:
+        admin.add_view(AdminView(model, db.session))
 
     from app.main.routes import main
     from app.users.routes import users
     from app.posts.routes import posts
     from app.errors.handlers import errors
-    app.register_blueprint(main)
-    app.register_blueprint(users)
-    app.register_blueprint(posts)
-    app.register_blueprint(errors)
+    for blueprint in main, users, posts, errors:
+        app.register_blueprint(blueprint)
+
     return app
