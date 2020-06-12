@@ -5,7 +5,6 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
 
 from app.config import Config
 from app.admin import AdminView, HomeAdminView
@@ -24,9 +23,9 @@ admin = Admin(
 )
 
 
-def create_app(config_class=Config):
+def create_app(config_cls=Config):
     app = Flask(__name__)
-    app.config.from_object(config_class)
+    app.config.from_object(config_cls)
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -36,10 +35,28 @@ def create_app(config_class=Config):
     admin.init_app(app)
 
     @app.cli.command()
-    def createdb():
+    def init_db():
         db.create_all()
 
-    from app.models import Role, Post, Tag
+    from app.models import User, Role, Post, Tag
+
+    @app.cli.command()
+    def create_admin():
+        admin = User(
+            username=app.config['ADMIN_USERNAME'],
+            email=app.config['ADMIN_EMAIL'],
+            password=app.config['ADMIN_PASSWORD']
+        )
+        role = Role(
+            name='Admin',
+            description='Site administrator'
+        )
+        db.session.add_all((admin, role))
+        db.session.commit()
+        admin.roles.append(role)
+        db.session.add(admin)
+        db.session.commit()
+
     for model in Role, Post, Tag:
         admin.add_view(AdminView(model, db.session))
 
