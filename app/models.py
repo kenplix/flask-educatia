@@ -85,6 +85,10 @@ class User(db.Model, UserMixin):
             return None
         return User.query.get(user_id)
 
+    def has_role(self, name: str) -> bool:
+        role = Role.query.filter_by(name=name).first()
+        return True if role in self.roles else False
+
     def __repr__(self):
         return f'User #{self.id} <{self.username}: {self.email}>'
 

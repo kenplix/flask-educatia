@@ -8,6 +8,7 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
 from app.config import Config
+from app.admin import AdminView, HomeAdminView
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -16,7 +17,11 @@ login_manager = LoginManager()
 login_manager.login_message_category = 'info'
 login_manager.login_view = 'users.login'
 mail = Mail()
-admin = Admin(name='Educatia')
+admin = Admin(
+    url='/',
+    name='Educatia',
+    index_view=HomeAdminView()
+)
 
 
 def create_app(config_class=Config):
@@ -36,7 +41,7 @@ def create_app(config_class=Config):
 
     from app.models import Role, Post, Tag
     for model in Role, Post, Tag:
-        admin.add_view(ModelView(model, db.session))
+        admin.add_view(AdminView(model, db.session))
 
     from app.main.routes import main
     from app.users.routes import users
