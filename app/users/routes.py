@@ -123,7 +123,7 @@ def reset_token(token: str):
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
 
-    user = User.verify(token)
+    user = User.verify_token(token)
     if user is None:
         flash('That is an invalid or expired token', 'warning')
         return redirect(url_for('users.reset_request'))
