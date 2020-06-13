@@ -18,6 +18,6 @@ Education platform for students and tutors written on Flask
 [SQLALCHEMY_DATABASE_URI](https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/ "Flask-Sqlalchemy documentation")   
 
 6. Initialize database: ```flask init-db```  
-7. Create the first admin to access the admin panel: ```flask create_admin```  
+7. Create the first admin to access the admin panel: ```flask create-admin```  
 8. Run the application: ```flask run```  
 9. Open web-browser in: ```http://127.0.0.1:5000/```  
