@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% from 'macros.html' import field_info with context %}
 {% block content %}
 <div class="content-section">
   <form method="POST" action="">
@@ -7,47 +8,11 @@
     <fieldset class="form-group">
       <legend class="border-bottom mb-4">{{ legend }}</legend>
       <!-- Title -->
-      <div class="form-group">
-        {{ form.title.label(class="form-control-label") }}
-        {% if form.title.errors %}
-          {{ form.title(class="form-control form-control-lg is-invalid") }}
-          <div class="invalid-feedback">
-            {% for error in form.title.errors %}
-              <span>{{ error }}</span>
-            {% endfor %}
-          </div>
-        {% else %}
-          {{ form.title(class="form-control form-control-lg") }}
-        {% endif %}
-      </div>
+      {{ field_info(form.title) }}
       <!-- Content -->
-      <div class="form-group">
-        {{ form.content.label(class="form-control-label") }}
-        {% if form.content.errors %}
-          {{ form.content(class="form-control form-control-lg is-invalid") }}
-          <div class="invalid-feedback">
-            {% for error in form.content.errors %}
-              <span>{{ error }}</span>
-            {% endfor %}
-          </div>
-        {% else %}
-          {{ form.content(class="form-control form-control-lg") }}
-        {% endif %}
-      </div>
+      {{ field_info(form.content) }}
       <!-- Tags -->
-      <div class="form-group">
-        {{ form.tags.label(class="form-control-label") }}
-        {% if form.tags.errors %}
-          {{ form.tags(class="form-control form-control-lg is-invalid") }}
-          <div class="invalid-feedback">
-            {% for error in form.tags.errors %}
-              <span>{{ error }}</span>
-            {% endfor %}
-          </div>
-        {% else %}
-          {{ form.tags(class="form-control form-control-lg") }}
-        {% endif %}
-      </div>
+      {{ field_info(form.tags) }}
     </fieldset>
     <div class="form-group">
       {{ form.submit(class="btn btn-outline-info") }}
