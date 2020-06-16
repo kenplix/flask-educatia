@@ -5,7 +5,7 @@ from app import db
 from app.models import User, Post
 from app.users.forms import (RegistrationForm, LoginForm, UpdateProfileForm,
                              RequestResetForm, ResetPasswordForm)
-from app.users.utils import save_picture, send_reset_email
+from app.users.utils import change_profile_picture, send_reset_email
 
 users = Blueprint('users', __name__)
 
@@ -68,8 +68,8 @@ def profile():
     form = UpdateProfileForm()
     if form.validate_on_submit():
         if form.picture.data:
-            picture_file = save_picture(form.picture.data)
-            current_user.image_file = picture_file
+            picture_filename = change_profile_picture(form.picture.data)
+            current_user.image_file = picture_filename
         current_user.username = form.username.data
         current_user.email = form.email.data
         db.session.commit()
@@ -79,8 +79,10 @@ def profile():
         form.username.data = current_user.username
         form.email.data = current_user.email
 
-    image_file = url_for('static',
-                         filename=f'profile_pics/{current_user.image_file}')
+    image_file = url_for(
+        'static',
+        filename=f'images/profile_pics/{current_user.image_file}'
+    )
     context = {
         'form': form,
         'title': 'Profile',

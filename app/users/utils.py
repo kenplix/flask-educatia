@@ -10,17 +10,21 @@ from flask_mail import Message
 from app import mail
 
 
-def save_picture(form_picture) -> str:
-    picture_path = partial(os.path.join, current_app.root_path, 'static/profile_pics')
+def change_profile_picture(picture) -> str:
+    picture_path = partial(
+        os.path.join,
+        current_app.root_path,
+        'static/images/profile_pics'
+    )
     if current_user.image_file != 'default.jpg':
         os.remove(picture_path(current_user.image_file))
 
-    random_hex = secrets.token_hex(8)
-    _, file_ext = os.path.splitext(form_picture.filename)
+    random_hex = secrets.token_hex(16)
+    _, file_ext = os.path.splitext(picture.filename)
     picture_filename = random_hex + file_ext
 
     output_size = (125, 125)
-    image = Image.open(form_picture)
+    image = Image.open(picture)
     image.thumbnail(output_size)
     image.save(picture_path(picture_filename))
     return picture_filename
