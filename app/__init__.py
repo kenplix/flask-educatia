@@ -57,6 +57,16 @@ def create_app(config_cls=Config):
         db.session.add(admin)
         db.session.commit()
 
+    @app.shell_context_processor
+    def make_shell_context():
+        return {
+            'db': db,
+            'User': User,
+            'Role': Role,
+            'Post': Post,
+            'Tag': Tag
+        }
+
     for model in Role, Post, Tag:
         admin.add_view(AdminView(model, db.session))
 
