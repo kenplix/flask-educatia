@@ -3,7 +3,7 @@ import secrets
 from functools import partial
 
 from PIL import Image
-from flask import url_for, current_app
+from flask import url_for, current_app, render_template
 from flask_login import current_user
 from flask_mail import Message
 
@@ -30,14 +30,21 @@ def change_profile_picture(picture) -> str:
     return picture_filename
 
 
-def send_reset_email(user):
-    token = user.reset_token()
-    msg = Message('Password Reset Request',
-                  sender='noreply@demo.com',
-                  recipients=[user.email])
-    msg.body = f'''To reset your password, visit the following link:
-{url_for('users.reset_token', token=token, _external=True)}
+def create_message(header, template, recipients, **kwargs):
+    return Message(
+        header,
+        sender=current_app.config['MAIL_USERNAME'],
+        recipients=recipients,
+        html=render_template(template, **kwargs)
+    )
 
-If you did not make this request then simply ignore this email and no changes will be made
-'''
+
+def send_token(user):
+    token = user.generate_token()
+    msg = create_message(
+        header='Password Reset Request',
+        template='mail/password_reset.html',
+        recipients=[user.email],
+        token=token
+    )
     mail.send(msg)

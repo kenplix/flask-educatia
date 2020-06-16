@@ -38,15 +38,15 @@ class User(db.Model, UserMixin):
     def verify_password(self, password: str) -> bool:
         return bcrypt.check_password_hash(self.password_hash, password)
 
-    def reset_token(self, expires_sec: int = 1800) -> str:
+    def generate_token(self, expires_sec: int = 1800) -> str:
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
         return s.dumps({'user_id': self.id}).decode('utf-8')
 
     @ staticmethod
-    def verify_token(reset_token: str) -> Optional['User']:
+    def verify_token(token: str) -> Optional['User']:
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            user_id = s.loads(reset_token)['user_id']
+            user_id = s.loads(token)['user_id']
         except:
             return None
         return User.query.get(user_id)

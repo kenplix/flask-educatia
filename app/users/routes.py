@@ -6,7 +6,7 @@ from app import db
 from app.models import User, Post
 from app.users.forms import (RegistrationForm, LoginForm, UpdateProfileForm,
                              RequestResetForm, ResetPasswordForm)
-from app.users.utils import change_profile_picture, send_reset_email
+from app.users.utils import change_profile_picture, send_token
 
 users = Blueprint('users', __name__)
 
@@ -112,7 +112,7 @@ def reset_request():
     form = RequestResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        send_reset_email(user)
+        send_token(user)
         flash('An email has been send with instructions to reset your password', 'info')
         return redirect(url_for('users.login'))
 
