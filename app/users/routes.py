@@ -1,4 +1,5 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
+from werkzeug.urls import url_parse
 from flask_login import login_user, current_user, logout_user, login_required
 
 from app import db
@@ -24,7 +25,6 @@ def register():
         )
         db.session.add(user)
         db.session.commit()
-        login_user(user)
         flash(f'Your account has been created', 'success')
         return redirect(url_for('main.home'))
 
@@ -45,8 +45,10 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.verify_password(form.password.data):
             login_user(user, remember=form.remember.data)
-            next = request.args.get('next')
-            return redirect(next) if next else redirect(url_for('main.home'))
+            next_page = request.args.get('next')
+            if next_page is None or url_parse(next_page).netloc != '':
+                next_page = url_for('main.home')
+            return redirect(next_page)
         flash('Login unsuccessful. Please check email and password', 'danger')
 
     context = {
@@ -83,6 +85,7 @@ def profile():
         'static',
         filename=f'images/profile_pics/{current_user.image_file}'
     )
+
     context = {
         'form': form,
         'title': 'Profile',
