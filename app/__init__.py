@@ -41,19 +41,32 @@ def create_app(config_cls=Config):
     from app.models import User, Role, Post, Tag
 
     @app.cli.command()
+    def create_roles():
+        admin = Role(
+            name='Admin',
+            description='Site administrator'
+        )
+        tutor = Role(
+            name='Tutor',
+            description='Can all that can student plus creating and editing posts'
+        )
+        student = Role(
+            name='Student',
+            description='Can read posts, leave comments, send messages'
+        )
+        db.session.add_all((admin, tutor, student))
+        db.session.commit()
+
+    @app.cli.command()
     def create_admin():
         admin = User(
             username=app.config['ADMIN_USERNAME'],
             email=app.config['ADMIN_EMAIL'],
             password=app.config['ADMIN_PASSWORD']
         )
-        role = Role(
-            name='Admin',
-            description='Site administrator'
-        )
-        db.session.add_all((admin, role))
+        db.session.add(admin)
         db.session.commit()
-        admin.roles.append(role)
+        admin.roles.append(Role.query.filter_by(name='Admin').first())
         db.session.add(admin)
         db.session.commit()
 

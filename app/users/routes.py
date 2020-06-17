@@ -47,13 +47,7 @@ def activate_account(token: str):
         flash('That is an invalid or expired token', 'warning')
         return redirect(url_for('users.profile'))
 
-    role = Role(
-        name='Student',
-        description='Can read posts, leave comments, send messages'
-    )
-    db.session.add(role)
-    db.session.commit()
-    user.roles.append(role)
+    user.roles.append(Role.query.filter_by(name='Student').first())
     db.session.add(user)
     db.session.commit()
     flash(f'Your account has been activated', 'success')
@@ -128,7 +122,7 @@ def user_posts(username: str):
     posts = Post.query.filter_by(author=user)\
         .order_by(Post.date.desc())\
         .paginate(page=page, per_page=5)
-    return render_template('users/user_posts.html', user=users, posts=posts)
+    return render_template('users/user_posts.html', user=user, posts=posts)
 
 
 @users.route('/reset_password', methods=['GET', 'POST'])
