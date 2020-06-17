@@ -3,7 +3,7 @@ from werkzeug.urls import url_parse
 from flask_login import login_user, current_user, logout_user, login_required
 
 from app import db
-from app.models import User, Post
+from app.models import User, Role, Post
 from app.users.forms import (RegistrationForm, LoginForm, UpdateProfileForm,
                              RequestResetForm, ResetPasswordForm)
 from app.users.utils import change_profile_picture, send_token
@@ -25,14 +25,41 @@ def register():
         )
         db.session.add(user)
         db.session.commit()
-        flash(f'Your account has been created', 'success')
-        return redirect(url_for('main.home'))
+        send_token(
+            user=user,
+            header='Account Activation Request',
+            template='mail/activate_account.html'
+        )
+        flash('An email has been send with instructions to activate your account', 'info')
+        return redirect(url_for('users.login'))
 
     context = {
         'form': form,
         'title': 'Register'
     }
     return render_template('users/register.html', **context)
+
+
+@users.route('/activate_account/<string:token>', methods=['GET', 'POST'])
+def activate_account(token: str):
+    user = User.verify_token(token)
+    if user is None:
+        flash('That is an invalid or expired token', 'warning')
+        return redirect(url_for('users.profile'))
+
+    role = Role(
+        name='Student',
+        description='Can read posts, leave comments, send messages'
+    )
+    db.session.add(role)
+    db.session.commit()
+    user.roles.append(role)
+    db.session.add(user)
+    db.session.commit()
+    flash(f'Your account has been activated', 'success')
+    if current_user.is_authenticated:
+        return redirect(url_for('users.profile'))
+    return redirect(url_for('users.login'))
 
 
 @users.route('/login', methods=['GET', 'POST'])
@@ -111,8 +138,11 @@ def reset_request():
 
     form = RequestResetForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        send_token(user)
+        send_token(
+            user=User.query.filter_by(email=form.email.data).first(),
+            header='Password Reset Request',
+            template='mail/reset_password.html'
+        )
         flash('An email has been send with instructions to reset your password', 'info')
         return redirect(url_for('users.login'))
 
@@ -124,7 +154,7 @@ def reset_request():
 
 
 @users.route('/reset_password/<string:token>', methods=['GET', 'POST'])
-def reset_token(token: str):
+def reset_password(token: str):
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
 
@@ -144,4 +174,4 @@ def reset_token(token: str):
         'form': form,
         'title': 'Reset Password'
     }
-    return render_template('users/reset_token.html', **context)
+    return render_template('users/reset_password.html', **context)

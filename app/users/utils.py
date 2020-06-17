@@ -39,11 +39,11 @@ def create_message(header, template, recipients, **kwargs):
     )
 
 
-def send_token(user):
+def send_token(user, header, template):
     token = user.generate_token()
     msg = create_message(
-        header='Password Reset Request',
-        template='mail/password_reset.html',
+        header=header,
+        template=template,
         recipients=[user.email],
         token=token
     )

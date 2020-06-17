@@ -1,0 +1,5 @@
+<h3>To activete your account, visit the following link:</h3>
+<a href="{{ url_for('users.activate_account', token=token, _external=True) }}">
+  <button>Link</button>
+</a>
+<p>If you did not make this request then simply ignore this email and no changes will be made</p>
