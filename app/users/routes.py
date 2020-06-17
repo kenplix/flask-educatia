@@ -1,4 +1,7 @@
-from flask import render_template, url_for, flash, redirect, request, Blueprint
+from datetime import datetime
+
+from flask import (render_template, url_for, flash,
+                   redirect, request, Blueprint)
 from werkzeug.urls import url_parse
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -9,6 +12,13 @@ from app.users.forms import (RegistrationForm, LoginForm, UpdateProfileForm,
 from app.users.utils import change_profile_picture, send_token
 
 users = Blueprint('users', __name__)
+
+
+@users.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.now()
+        db.session.commit()
 
 
 @users.route('/register', methods=['GET', 'POST'])
@@ -51,8 +61,6 @@ def activate_account(token: str):
     db.session.add(user)
     db.session.commit()
     flash(f'Your account has been activated', 'success')
-    if current_user.is_authenticated:
-        return redirect(url_for('users.profile'))
     return redirect(url_for('users.login'))
 
 

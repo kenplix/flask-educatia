@@ -6,7 +6,10 @@
     <img class="rounded-circle account-img" src="{{ image_file }}">
     <div class="media-body">
       <h2 class="account-heading">{{ current_user.username }}</h2>
-      <p class="text-secondary">{{ current_user.email }}</p>
+      {% if current_user.about_me %}
+        <p class="text-secondary">About me:{{ current_user.about_me }}</p>
+      {% endif %}
+      <p class="text-secondary">Last seen on: {{ current_user.last_seen }}</p>
     </div>
   </div>
   <div class="content-section">
