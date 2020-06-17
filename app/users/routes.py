@@ -102,12 +102,14 @@ def profile():
             picture_filename = change_profile_picture(form.picture.data)
             current_user.image_file = picture_filename
         current_user.username = form.username.data
+        current_user.about_me = form.about_me.data
         current_user.email = form.email.data
         db.session.commit()
         flash('Your profile has been updated', 'success')
         return redirect(url_for('users.profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
+        form.about_me.data = current_user.about_me
         form.email.data = current_user.email
 
     image_file = url_for(

@@ -7,7 +7,7 @@
     <div class="media-body">
       <h2 class="account-heading">{{ current_user.username }}</h2>
       {% if current_user.about_me %}
-        <p class="text-secondary">About me:{{ current_user.about_me }}</p>
+        <p class="text-secondary">About me: {{ current_user.about_me }}</p>
       {% endif %}
       <p class="text-secondary">Last seen on: {{ current_user.last_seen }}</p>
     </div>
@@ -20,6 +20,8 @@
         <legend class="border-bottom mb-4">Profile Info</legend>
         <!-- Username -->
         {{ field_info(form.username) }}
+        <!-- About Me -->
+        {{ field_info(form.about_me) }}
         <!-- Email -->
         {{ field_info(form.email) }}
         <!-- Profile Picture -->

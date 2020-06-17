@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms import (StringField, PasswordField, SubmitField,
+                     BooleanField, TextAreaField)
+from wtforms.validators import (DataRequired, Length, Email,
+                                EqualTo, ValidationError)
 from flask_login import current_user
 
 from app.models import User
@@ -65,6 +67,11 @@ class UpdateProfileForm(FlaskForm):
         'Username',
         validators=[DataRequired(),
                     Length(min=3, max=25)]
+    )
+
+    about_me = TextAreaField(
+        'About me',
+        validators=[Length(min=0, max=128)]
     )
 
     email = StringField(
