@@ -20,12 +20,14 @@ UserRole = db.Table(
 )
 
 
-class User(db.Model, UserMixin):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), unique=True, nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
     image_file = db.Column(db.String(64), nullable=False, default='default.jpg')
     password_hash = db.Column(db.String(128), nullable=False)
+    about_me = db.Column(db.String(128))
+    last_seen = db.Column(db.DateTime, default=datetime.now)
 
     @property
     def password(self):
@@ -91,7 +93,7 @@ PostTag = db.Table(
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(128), nullable=False)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
