@@ -67,7 +67,7 @@ def create_app(config_cls=Config):
             'Tag': Tag
         }
 
-    for model in Role, Post, Tag:
+    for model in User, Role, Post, Tag:
         admin.add_view(AdminView(model, db.session))
 
     from app.main.routes import main
