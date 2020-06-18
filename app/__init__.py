@@ -6,7 +6,7 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_admin import Admin
 
-from app.config import Config
+from config import BaseConfig
 from app.admin import AdminView, HomeAdminView
 
 db = SQLAlchemy()
@@ -23,7 +23,7 @@ admin = Admin(
 )
 
 
-def create_app(config_cls=Config):
+def create_app(config_cls=BaseConfig):
     app = Flask(__name__)
     app.config.from_object(config_cls)
 
