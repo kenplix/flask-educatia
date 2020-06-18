@@ -66,7 +66,7 @@ class User(UserMixin, db.Model):
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
         return s.dumps({'user_id': self.id}).decode('utf-8')
 
-    @ staticmethod
+    @staticmethod
     def verify_token(token: str) -> Optional['User']:
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
