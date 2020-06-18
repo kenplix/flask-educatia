@@ -1,3 +1,7 @@
+import os
+import logging
+from logging.handlers import SMTPHandler, RotatingFileHandler
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -23,6 +27,41 @@ admin = Admin(
 )
 
 
+def logged(app):
+    if app.config['MAIL_SERVER']:
+        auth = None
+        if app.config['MAIL_USERNAME'] and app.config['MAIL_PASSWORD']:
+            auth = (app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])
+
+        secure = None
+        if app.config['MAIL_USE_TLS']:
+            secure = ()
+
+        mail_handler = SMTPHandler(
+            mailhost=(app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
+            fromaddr=app.config['MAIL_USERNAME'] + '@' + app.config['MAIL_SERVER'],
+            toaddrs=app.config['ADMIN_EMAIL'], subject='Educatia Failure',
+            credentials=auth, secure=secure
+        )
+        mail_handler.setLevel(logging.ERROR)
+        app.logger.addHandler(mail_handler)
+
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
+    file_handler = RotatingFileHandler(
+        'logs/educatia.log',
+        maxBytes=10240,
+        backupCount=10
+    )
+    fmt = '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    file_handler.setFormatter(logging.Formatter(fmt))
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('Educatia startup')
+
+
 def create_app(config_cls=BaseConfig):
     app = Flask(__name__)
     app.config.from_object(config_cls)
@@ -33,6 +72,9 @@ def create_app(config_cls=BaseConfig):
     login_manager.init_app(app)
     mail.init_app(app)
     admin.init_app(app)
+
+    if not app.debug:
+        logged(app)
 
     @app.cli.command()
     def init_db():
