@@ -93,6 +93,27 @@ def logout():
     return redirect(url_for('main.home'))
 
 
+def image_file(user: User):
+    return url_for(
+        'static',
+        filename=f'images/profile_pics/{user.image_file}'
+    )
+
+
+@users.route('/user/<string:username>')
+@login_required
+def user(username: str):
+    user = User.query.filter_by(username=username).first_or_404()
+    if user == current_user:
+        return redirect(url_for('users.profile'))
+
+    context = {
+        'user': user,
+        'image_file': image_file(user)
+    }
+    return render_template('users/user.html', **context)
+
+
 @users.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
@@ -112,15 +133,10 @@ def profile():
         form.about_me.data = current_user.about_me
         form.email.data = current_user.email
 
-    image_file = url_for(
-        'static',
-        filename=f'images/profile_pics/{current_user.image_file}'
-    )
-
     context = {
         'form': form,
         'title': 'Profile',
-        'image_file': image_file
+        'image_file': image_file(current_user)
     }
     return render_template('users/profile.html', **context)
 
