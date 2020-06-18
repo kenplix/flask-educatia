@@ -7,16 +7,16 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 from app import db, bcrypt, login_manager
 
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
-
-
 UserRole = db.Table(
     'user_role',
     db.Column('user_id', db.Integer, db.ForeignKey('role.id')),
     db.Column('role_id', db.Integer, db.ForeignKey('user.id'))
+)
+
+Followers = db.Table(
+    'followers',
+    db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
 
 
@@ -29,12 +29,34 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.String(128))
     last_seen = db.Column(db.DateTime, default=datetime.now)
 
+    posts = db.relationship(
+        'Post',
+        backref='author',
+        lazy='dynamic'
+    )
+
+    roles = db.relationship(
+        'Role',
+        secondary=UserRole,
+        backref=db.backref('users', lazy='dynamic'),
+        lazy=True
+    )
+
+    followed = db.relationship(
+        'User',
+        secondary=Followers,
+        primaryjoin=(Followers.c.follower_id == id),
+        secondaryjoin=(Followers.c.followed_id == id),
+        backref=db.backref('followers', lazy='dynamic'),
+        lazy='dynamic'
+    )
+
     @property
     def password(self):
         raise AttributeError('Password not readable')
 
     @password.setter
-    def password(self, plaintext: str):
+    def password(self, plaintext: str) -> None:
         self.password_hash = bcrypt.generate_password_hash(plaintext).decode('utf-8')
 
     def verify_password(self, password: str) -> bool:
@@ -53,25 +75,17 @@ class User(UserMixin, db.Model):
             return None
         return User.query.get(user_id)
 
-    posts = db.relationship(
-        'Post',
-        backref='author',
-        lazy='dynamic'
-    )
-
-    roles = db.relationship(
-        'Role',
-        secondary=UserRole,
-        backref=db.backref('users', lazy='dynamic'),
-        lazy=True
-    )
-
     def has_role(self, name: str) -> bool:
         role = Role.query.filter_by(name=name).first()
         return True if role in self.roles else False
 
     def __repr__(self):
         return f'User #{self.id} <{self.username}: {self.email}>'
+
+
+@login_manager.user_loader
+def load_user(user_id: int) -> User:
+    return User.query.get(user_id)
 
 
 class Role(db.Model):
