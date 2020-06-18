@@ -79,6 +79,18 @@ class User(UserMixin, db.Model):
         role = Role.query.filter_by(name=name).first()
         return True if role in self.roles else False
 
+    def follow(self, user):
+        if not self.is_following(user):
+            self.followed.append(user)
+
+    def unfollow(self, user):
+        if self.is_following(user):
+            self.followed.remove(user)
+
+    def is_following(self, user):
+        return self.followed.filter(
+            Followers.c.followed_id == user.id).count() > 0
+
     def __repr__(self):
         return f'User #{self.id} <{self.username}: {self.email}>'
 
