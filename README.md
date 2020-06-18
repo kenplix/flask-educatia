@@ -21,16 +21,19 @@ MAIL_PASSWORD=<Password for $MAIL_USERNAME@$MAIL_SERVER>
 ADMIN_EMAIL=no-reply@gmail.com
 ADMIN_PASSWORD=<Password for no-reply@gmail.com>
 ```  
-Configuration sample to use your Gmail account's email server. 
+#### Useful links:
+[SECRET_KEY](https://stackoverflow.com/questions/34902378/where-do-i-get-a-secret-key-for-flask "Stackoverflow")  
+[SQLALCHEMY_DATABASE_URI](https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/ "Flask-Sqlalchemy documentation")  
+#### Configuration sample to use your Gmail account's email server. 
 ```
 MAIL_SERVER=smtp.googlemail.com
 MAIL_PORT=587
 MAIL_USE_TLS=True
 ```
-
-#### Useful links:
-[SECRET_KEY](https://stackoverflow.com/questions/34902378/where-do-i-get-a-secret-key-for-flask "Stackoverflow")  
-[SQLALCHEMY_DATABASE_URI](https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/ "Flask-Sqlalchemy documentation")   
+The security features in your Gmail account may prevent the application from sending emails  
+through it unless you explicitly allow "less secure apps" access to your Gmail account. You can  
+read about this [here](https://support.google.com/accounts/answer/6010255?hl=en), and if you are concerned about the security of your account, you can create  
+a secondary account that you configure just for newsletters emails. 
 
 6. Initialize database: ```flask init-db``` 
 7. Create all roles: ```flask create-roles```  
