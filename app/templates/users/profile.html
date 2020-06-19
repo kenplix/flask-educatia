@@ -10,6 +10,7 @@
         <p class="text-secondary">About me: {{ current_user.about_me }}</p>
       {% endif %}
       <p class="text-secondary">Last seen on: {{ current_user.last_seen }}</p>
+      <p>{{ current_user.followers.count() }} followers, {{ current_user.followed.count() }} following.</p>
     </div>
   </div>
   <div class="content-section">
@@ -37,6 +38,7 @@
       </fieldset>
       <div class="form-group">
         {{ form.submit(class="btn btn-outline-info") }}
+        <a class="btn btn-outline-info" href="{{ url_for('users.user_posts', username=current_user.username) }}" role="button">Posts</a>
       </div>
     </form>
   </div>

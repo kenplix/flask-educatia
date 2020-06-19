@@ -192,7 +192,7 @@ def user_posts(username: str):
     posts = Post.query.filter_by(author=user)\
         .order_by(Post.date.desc())\
         .paginate(page=page, per_page=5)
-    return render_template('users/user_posts.html', user=user, posts=posts)
+    return render_template('users/user_posts.html', user=user, posts=posts, view='main.home')
 
 
 @users.route('/reset_request', methods=['GET', 'POST'])
