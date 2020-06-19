@@ -19,14 +19,16 @@
   <header class="site-header">
     <nav class="navbar navbar-expand-lg navbar-dark bg-steel fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="{{ url_for('main.home') }}">Educatia</a>
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">Educatia</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <!-- Left Side -->
           <div class="navbar-nav mr-auto">
-            <a class="nav-item nav-link" href="{{ url_for('main.home') }}">Home</a>
+            {% if current_user.is_authenticated %}
+              <a class="nav-item nav-link" href="{{ url_for('main.home') }}">Home</a>
+            {% endif %}
             <a class="nav-item nav-link" href="{{ url_for('main.about') }}">About</a>
             <form class="form-inline", method="GET">
               <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query" value="{{ request.args.get('query', '') }}">

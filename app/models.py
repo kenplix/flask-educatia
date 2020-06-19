@@ -96,7 +96,7 @@ class User(UserMixin, db.Model):
             Followers, (Followers.c.followed_id == Post.user_id)).filter(
                 Followers.c.follower_id == self.id)
         own = Post.query.filter_by(user_id=self.id)
-        return followed.union(own).order_by(Post.timestamp.desc())
+        return followed.union(own)
 
     def __repr__(self):
         return f'User #{self.id} <{self.username}: {self.email}>'
