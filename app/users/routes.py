@@ -100,7 +100,7 @@ def image_file(user: User):
     )
 
 
-@users.route('/user/<string:username>')
+@users.route('/users/<string:username>')
 @login_required
 def user(username: str):
     user = User.query.filter_by(username=username).first_or_404()
@@ -141,7 +141,7 @@ def profile():
     return render_template('users/profile.html', **context)
 
 
-@users.route('/users/<string:username>')
+@users.route('/users/<string:username>/posts')
 def user_posts(username: str):
     page = request.args.get('page', 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
@@ -151,7 +151,7 @@ def user_posts(username: str):
     return render_template('users/user_posts.html', user=user, posts=posts)
 
 
-@users.route('/reset_password', methods=['GET', 'POST'])
+@users.route('/reset_request', methods=['GET', 'POST'])
 def reset_request():
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))

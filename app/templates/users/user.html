@@ -1,5 +1,4 @@
 {% extends 'layout.html' %}
-{% from 'macros.html' import field_info with context %}
 {% block content %}
 <div class="content-section">
   <div class="media">
@@ -10,6 +9,12 @@
         <p class="text-secondary">About me: {{ user.about_me }}</p>
       {% endif %}
       <p class="text-secondary">Last seen on: {{ user.last_seen }}</p>
+      <a class="btn btn-outline-info" href="#" role="button">Send message</a>
+      <a class="btn btn-outline-info" href="#" role="button">Posts</a>
+    </div>
+    <div>
+      <a class="btn btn-outline-success" href="#" role="button">Follow</a>
+      <a class="btn btn-outline-danger" href="#" role="button">Unfollow</a>
     </div>
   </div>
 </div>
