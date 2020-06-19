@@ -41,7 +41,7 @@ def home():
         'posts': paginate(page, posts),
         'view': 'main.home'
     }
-    return render_template('main/index.html', posts=paginate(page, posts), view='main.home')
+    return render_template('main/index.html', **context)
 
 
 @main.route('/about')

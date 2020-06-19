@@ -23,7 +23,7 @@ def tag(tag_id: int):
     tag = Tag.query.get_or_404(tag_id)
     posts = tag.posts.order_by(Post.date.desc())\
         .paginate(page=page, per_page=5)
-    return render_template('main/home.html', posts=posts)
+    return render_template('main/index.html', posts=posts, view='main.index')
 
 
 def make_tags(data: str, delimiter: str = ',') -> Iterable[Tag]:
