@@ -7,8 +7,8 @@ __pycache__/
 
 logs/
 
-app/static/profile_pics/*
-!app/static/profile_pics/default.jpg
+app/static/images/profile_pics/*
+!app/static/images/profile_pics/default.jpg
 
 *.db
 *.env
