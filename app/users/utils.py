@@ -1,9 +1,10 @@
 import os
 import secrets
+from threading import Thread
 from functools import partial
 
 from PIL import Image
-from flask import url_for, current_app, render_template
+from flask import current_app, render_template
 from flask_login import current_user
 from flask_mail import Message
 
@@ -30,21 +31,17 @@ def change_profile_picture(picture) -> str:
     return picture_filename
 
 
-def create_message(header, template, recipients, **kwargs):
-    return Message(
-        header,
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
+
+
+def send_token(user, subject, template):
+    app = current_app._get_current_object()
+    msg = Message(
+        subject,
         sender=current_app.config['MAIL_USERNAME'],
-        recipients=recipients,
-        html=render_template(template, **kwargs)
-    )
-
-
-def send_token(user, header, template):
-    token = user.generate_token()
-    msg = create_message(
-        header=header,
-        template=template,
         recipients=[user.email],
-        token=token
+        html=render_template(template, token=user.generate_token())
     )
-    mail.send(msg)
+    Thread(target=send_async_email, args=(app, msg)).start()

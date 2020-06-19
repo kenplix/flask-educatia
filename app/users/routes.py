@@ -37,7 +37,7 @@ def register():
         db.session.commit()
         send_token(
             user=user,
-            header='Account Activation Request',
+            subject='Account Activation Request',
             template='mail/activate_account.html'
         )
         flash('An email has been send with instructions to activate your account', 'info')
@@ -204,7 +204,7 @@ def reset_request():
     if form.validate_on_submit():
         send_token(
             user=User.query.filter_by(email=form.email.data).first(),
-            header='Password Reset Request',
+            subject='Password Reset Request',
             template='mail/reset_password.html'
         )
         flash('An email has been send with instructions to reset your password', 'info')
