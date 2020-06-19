@@ -8,7 +8,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from app import db
 from app.models import User, Role, Post
 from app.users.forms import (RegistrationForm, LoginForm, UpdateProfileForm,
-                             RequestResetForm, ResetPasswordForm)
+                             RequestResetForm, ResetPasswordForm, EmptyForm)
 from app.users.utils import change_profile_picture, send_token
 
 users = Blueprint('users', __name__)
@@ -101,13 +101,17 @@ def image_file(user: User):
 
 
 @users.route('/users/<string:username>')
-@login_required
 def user(username: str):
-    user = User.query.filter_by(username=username).first_or_404()
+    form = EmptyForm()
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash(f'User {username} not found', 'danger')
+        return redirect(url_for('main.home'))
     if user == current_user:
         return redirect(url_for('users.profile'))
 
     context = {
+        'form': form,
         'user': user,
         'image_file': image_file(user)
     }
@@ -139,6 +143,46 @@ def profile():
         'image_file': image_file(current_user)
     }
     return render_template('users/profile.html', **context)
+
+
+@users.route('/follow/<string:username>', methods=['POST'])
+@login_required
+def follow(username: str):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            flash(f'User {username} not found', 'danger')
+            return redirect(url_for('main.home'))
+        if user == current_user:
+            flash('You cannot follow yourself!', 'warning')
+            return redirect(url_for('users.profile'))
+        current_user.follow(user)
+        db.session.commit()
+        flash(f'You are following {username}', 'success')
+        return redirect(url_for('users.user', username=username))
+    else:
+        return redirect(url_for('main.home'))
+
+
+@users.route('/unfollow/<string:username>', methods=['POST'])
+@login_required
+def unfollow(username: str):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            flash(f'User {username} not found', 'danger')
+            return redirect(url_for('main.home'))
+        if user == current_user:
+            flash('You cannot unfollow yourself!')
+            return redirect(url_for('users.profile'))
+        current_user.unfollow(user)
+        db.session.commit()
+        flash(f'You are not following {username}', 'success')
+        return redirect(url_for('users.user', username=username))
+    else:
+        return redirect(url_for('main.home'))
 
 
 @users.route('/users/<string:username>/posts')

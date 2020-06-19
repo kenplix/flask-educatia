@@ -37,9 +37,9 @@ class RegistrationForm(FlaskForm):
 
     submit = SubmitField('Sign Up')
 
-    # def validate_username(self, username):
-    #     if User.query.filter_by(username=username.data).first():
-    #         raise ValidationError(BAD_VALIDATION.format('username'))
+    def validate_username(self, username):
+        if User.query.filter_by(username=username.data).first():
+            raise ValidationError(BAD_VALIDATION.format('username'))
 
     def validate_email(self, email):
         if User.query.filter_by(email=email.data).first():
@@ -125,3 +125,7 @@ class ResetPasswordForm(FlaskForm):
     )
 
     submit = SubmitField('Reset Password')
+
+
+class EmptyForm(FlaskForm):
+    submit = SubmitField('Submit')

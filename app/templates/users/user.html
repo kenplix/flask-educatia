@@ -9,13 +9,31 @@
         <p class="text-secondary">About me: {{ user.about_me }}</p>
       {% endif %}
       <p class="text-secondary">Last seen on: {{ user.last_seen }}</p>
-      <a class="btn btn-outline-info" href="#" role="button">Send message</a>
-      <a class="btn btn-outline-info" href="#" role="button">Posts</a>
+      <p>{{ user.followers.count() }} followers, {{ user.followed.count() }} following.</p>
+      {% if current_user.is_authenticated %}
+        <a class="btn btn-outline-info" href="#" role="button">Send message</a>
+      {% endif %}
+      <a class="btn btn-outline-info" href="{{ url_for('users.user_posts', username=user.username) }}" role="button">Posts</a>
     </div>
-    <div>
-      <a class="btn btn-outline-success" href="#" role="button">Follow</a>
-      <a class="btn btn-outline-danger" href="#" role="button">Unfollow</a>
-    </div>
+    {% if current_user.is_authenticated %}
+      <div>
+          {% if current_user.is_following(user) %}
+          <p>
+            <form action="{{ url_for('users.unfollow', username=user.username) }}" method="POST">
+              {{ form.hidden_tag() }}
+              {{ form.submit(value="Unfollow", class="btn btn-outline-danger") }}
+            </form>
+          </p>
+          {% else %}
+          <p>
+            <form action="{{ url_for('users.follow', username=user.username) }}" method="POST">
+              {{ form.hidden_tag() }}
+              {{ form.submit(value="Follow", class="btn btn-outline-success") }}
+            </form>
+          </p>
+          {% endif %}
+      </div>
+    {% endif %}
   </div>
 </div>
 {% endblock content %}
