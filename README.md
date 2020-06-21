@@ -8,7 +8,8 @@ Education platform for students and tutors written on Flask.
 4. Install requirements: ```python3 -m pip install -r requirements.txt``` 
 5. Set up the configuration data in ```.env``` file as shown below:  
 ```
-SECRET_KEY=<Your secret string>
+SECRET_KEY=<Your first secret string>
+CSRF_SESSION_KEY=<Your second secret string>
 
 DATABASE_URI=<dialect+driver://username:password@host:port/database>
 
