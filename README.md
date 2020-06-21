@@ -22,9 +22,15 @@ MAIL_PASSWORD=<Password for $MAIL_USERNAME@$MAIL_SERVER>
 ADMIN_EMAIL=no-reply@gmail.com
 ADMIN_PASSWORD=<Password for no-reply@gmail.com>
 ```  
-#### Useful links:
-[SECRET_KEY](https://stackoverflow.com/questions/34902378/where-do-i-get-a-secret-key-for-flask "Stackoverflow")  
-[SQLALCHEMY_DATABASE_URI](https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/ "Flask-Sqlalchemy documentation")  
+SECRET_KEY is used for cryptographically signing cookies, which in turn are used for sessions. This means that cookies cannot  
+be modified by anybody who does not possess the secret key. In production, SECRET_KEY should be set to a securely randomized  
+string. You can easily generate one using Python by opening a REPL (running python in your terminal) and entering: 
+```python
+>>> import binascii
+>>> import os
+>>> binascii.hexlify(os.urandom(24))
+```
+Examples of how to set SQLALCHEMY_DATABASE_URI can be seen [here](https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/ "Flask-Sqlalchemy documentation").  
 #### Configuration sample to use your Gmail account's email server. 
 ```
 MAIL_SERVER=smtp.googlemail.com
