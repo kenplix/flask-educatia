@@ -16,6 +16,7 @@ def error_templates(app):
     '''
     Register 0 or more custom error pages. Note that this function mutates the
     provided 'app' parameter.
+
     :param app: Flask application instance
     '''
 
@@ -24,7 +25,8 @@ def error_templates(app):
         Render a custom template for a specific status.
           Source: http://stackoverflow.com/a/30108946
         :param status: Status as a written name
-        :return:       None
+
+        :return: None
         '''
 
         # Get the status code from the status, default to a 500 so that we
