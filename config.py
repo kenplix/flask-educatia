@@ -8,13 +8,18 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 
 class BaseConfig:
-    """Set Flask configuration variables from .env file."""
+    """Flask configuration variables from .env file."""
+
+    # Logging settings:
+    LOGGING_FORMAT = '%(asctime)s %(levelname)s: %(message)s ' \
+                     '[in %(pathname)s:%(lineno)d]'
+    LOGGING_LOCATION = os.path.join(BASE_DIR, 'logs', 'app.log')
 
     # Flask settings:
     # Secret key for signing cookies
     SECRET_KEY = os.environ.get('SECRET_KEY')
     # Statement for enabling the development environment
-    DEBUG = True
+    DEBUG = False
     # Application threads. A common general assumption is
     # using 2 per available processor cores - to handle
     # incoming requests using one and performing background

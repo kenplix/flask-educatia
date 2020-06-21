@@ -49,12 +49,11 @@ def logged(app):
     if not os.path.exists('logs'):
         os.mkdir('logs')
     file_handler = RotatingFileHandler(
-        'logs/educatia.log',
+        app.config['LOGGING_LOCATION'],
         maxBytes=10240,
         backupCount=10
     )
-    fmt = '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
-    file_handler.setFormatter(logging.Formatter(fmt))
+    file_handler.setFormatter(logging.Formatter(app.config['LOGGING_FORMAT']))
     file_handler.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)
 
