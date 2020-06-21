@@ -39,4 +39,4 @@ a secondary account that you configure just for newsletters emails.
 7. Create all roles: ```flask create-roles```  
 8. Create the first admin to access the admin panel: ```flask create-admin```  
 9. Run the application: ```flask run```  
-10. Open web-browser in: ```http://127.0.0.1:5000/```  
+10. Open your web-browser at [http://127.0.0.1:5000/login], you should be redirected to the login page.  
