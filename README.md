@@ -8,7 +8,8 @@ Education platform for students and tutors written on Flask.
 4. Install requirements: ```python3 -m pip install -r requirements.txt``` 
 5. Set up the configuration data in ```.env``` file as shown below:  
 ```
-SECRET_KEY=<Your secret string>
+SECRET_KEY=<Your first secret string>
+CSRF_SESSION_KEY=<Your second secret string>
 
 DATABASE_URI=<dialect+driver://username:password@host:port/database>
 
@@ -21,9 +22,15 @@ MAIL_PASSWORD=<Password for $MAIL_USERNAME@$MAIL_SERVER>
 ADMIN_EMAIL=no-reply@gmail.com
 ADMIN_PASSWORD=<Password for no-reply@gmail.com>
 ```  
-#### Useful links:
-[SECRET_KEY](https://stackoverflow.com/questions/34902378/where-do-i-get-a-secret-key-for-flask "Stackoverflow")  
-[SQLALCHEMY_DATABASE_URI](https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/ "Flask-Sqlalchemy documentation")  
+SECRET_KEY is used for cryptographically signing cookies, which in turn are used for sessions. This means that cookies cannot  
+be modified by anybody who does not possess the secret key. In production, SECRET_KEY should be set to a securely randomized  
+string. You can easily generate one using Python by opening a REPL (running python in your terminal) and entering: 
+```python
+>>> import binascii
+>>> import os
+>>> binascii.hexlify(os.urandom(24))
+```
+Examples of how to set SQLALCHEMY_DATABASE_URI can be seen [here](https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/ "Flask-Sqlalchemy documentation").  
 #### Configuration sample to use your Gmail account's email server. 
 ```
 MAIL_SERVER=smtp.googlemail.com
@@ -39,4 +46,4 @@ a secondary account that you configure just for newsletters emails.
 7. Create all roles: ```flask create-roles```  
 8. Create the first admin to access the admin panel: ```flask create-admin```  
 9. Run the application: ```flask run```  
-10. Open web-browser in: ```http://127.0.0.1:5000/```  
+10. Open your web-browser at [http://127.0.0.1:5000/login], you should be redirected to the login page.  
