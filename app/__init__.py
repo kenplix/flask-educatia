@@ -11,6 +11,7 @@ from flask_mail import Mail
 from flask_admin import Admin
 
 from config import BaseConfig
+from app.errors import error_templates
 from app.admin import AdminView, HomeAdminView
 
 db = SQLAlchemy()
@@ -71,6 +72,10 @@ def create_app(config_cls=BaseConfig):
     if not app.debug:
         logged(app)
 
+    # Create handlers for all necessary HTTP errors. In our case, we're simply
+    # rendering templates for each error of interest.
+    error_templates(app)
+
     @app.cli.command()
     def init_db():
         db.create_all()
@@ -124,8 +129,7 @@ def create_app(config_cls=BaseConfig):
     from app.auth.routes import auth
     from app.users.routes import users
     from app.posts.routes import posts
-    from app.errors.handlers import errors
-    for blueprint in main, auth, users, posts, errors:
+    for blueprint in main, auth, users, posts:
         app.register_blueprint(blueprint)
 
     return app
