@@ -23,17 +23,13 @@ def error_templates(app):
         '''
         Render a custom template for a specific status.
           Source: http://stackoverflow.com/a/30108946
-        :param status: Status as a written name
 
+        :param status: Status as a written name
         :return: None
         '''
 
-        # Get the status code from the status, default to a 500 so that we
-        # catch all types of errors and treat them as a 500.
         code = getattr(status, 'code', 500)
         return render_template(f'errors/{code}.html'), code
 
-    # Iterate through each error code we have decided to create error pages
-    # for, and create their respective error handlers.
     for error in [403, 404, 500]:
         app.errorhandler(error)(render_status)

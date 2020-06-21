@@ -1,8 +1,8 @@
 '''
 
-Defines factory function in our Flask application.
+Defines application factory function
 
-Performs configuration from our settings class.
+Performs configuration from settings class.
 
 Author:     Aleksandr Tolstoy <aleksandr13tolstoy@gmail.com>
 Created:    June, 2020
@@ -24,10 +24,8 @@ from app.admin import AdminView
 
 def logger(app):
     '''
-    Configures a file and mail handler for use with the Flask application's
-    built-in logger. The log location, log level, and log formats can all be
-    configured via the config file. Note that this function mutates the
-    provided 'app' parameter.
+    Configures, a file and mail handler. Note that this function
+    mutates the provided 'app' parameter.
 
     :param app: Flask application instance
     '''
@@ -39,8 +37,7 @@ def logger(app):
         secure = None
         if app.config['MAIL_USE_TLS']:
             secure = ()
-        # Instantiates a new Mail Handler, sends internal server errors on
-        # admin email specified by the app config.
+
         mail_handler = SMTPHandler(
             mailhost=(app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
             fromaddr=app.config['MAIL_USERNAME'] + '@' + app.config['MAIL_SERVER'],
@@ -48,26 +45,19 @@ def logger(app):
             credentials=auth, secure=secure
         )
         mail_handler.setLevel(logging.ERROR)
-        # Registers handler with the Flask pre-configured logger object.
         app.logger.addHandler(mail_handler)
 
     if not os.path.exists('logs'):
         os.mkdir('logs')
 
-    # Instantiates a new File Handler, stores our log files in the directory
-    # specified by the app config. Set the log level to the configured value.
     file_handler = RotatingFileHandler(
         app.config['LOGGING_LOCATION'],
         maxBytes=10240,
         backupCount=10
     )
-    file_handler.setLevel(logging.INFO)
-    # Creates and applies a log formatter, using the format specified
-    # in the app config.
+    file_handler.setLevel(app.config['LOGGING_LEVEL'])
     file_handler.setFormatter(logging.Formatter(app.config['LOGGING_FORMAT']))
-    # Registers handler with the Flask pre-configured logger object.
     app.logger.addHandler(file_handler)
-    app.logger.setLevel(logging.INFO)
     app.logger.info('Educatia startup')
 
 
