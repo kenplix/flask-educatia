@@ -28,7 +28,14 @@ admin = Admin(
 )
 
 
-def logged(app):
+def logger(app):
+    '''
+    Configure a file and mail handler for use with the Flask application's
+    built-in logger. The log location, log level, and log formats can all be
+    configured via the config file. Note that this function mutates the
+    provided 'app' parameter.
+    :param app: Flask application instance
+    '''
     if app.config['MAIL_SERVER']:
         auth = None
         if app.config['MAIL_USERNAME'] and app.config['MAIL_PASSWORD']:
@@ -37,7 +44,8 @@ def logged(app):
         secure = None
         if app.config['MAIL_USE_TLS']:
             secure = ()
-
+        # Instantiate a new Mail Handler, sending internal server errors on
+        # admin email specified by the app config.
         mail_handler = SMTPHandler(
             mailhost=(app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
             fromaddr=app.config['MAIL_USERNAME'] + '@' + app.config['MAIL_SERVER'],
@@ -45,19 +53,27 @@ def logged(app):
             credentials=auth, secure=secure
         )
         mail_handler.setLevel(logging.ERROR)
+        # Register our handler with the Flask object's pre-configured logger
+        # object.
         app.logger.addHandler(mail_handler)
 
     if not os.path.exists('logs'):
         os.mkdir('logs')
+
+    # Instantiate a new File Handler, storing our log files in the directory
+    # specified by the app config. Set the log level to the configured value.
     file_handler = RotatingFileHandler(
         app.config['LOGGING_LOCATION'],
         maxBytes=10240,
         backupCount=10
     )
-    file_handler.setFormatter(logging.Formatter(app.config['LOGGING_FORMAT']))
     file_handler.setLevel(logging.INFO)
+    # Create a log formatter, using the format specified in the app config.
+    # Apply this formatter to the above created handler.
+    file_handler.setFormatter(logging.Formatter(app.config['LOGGING_FORMAT']))
+    # Register our handler with the Flask object's pre-configured logger
+    # object.
     app.logger.addHandler(file_handler)
-
     app.logger.setLevel(logging.INFO)
     app.logger.info('Educatia startup')
 
@@ -70,7 +86,7 @@ def create_app(config_cls=BaseConfig):
         ext.init_app(app)
 
     if not app.debug:
-        logged(app)
+        logger(app)
 
     # Create handlers for all necessary HTTP errors. In our case, we're simply
     # rendering templates for each error of interest.
