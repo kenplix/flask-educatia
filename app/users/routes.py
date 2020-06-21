@@ -55,7 +55,7 @@ def activate_account(token: str):
     user = User.verify_token(token)
     if user is None:
         flash('That is an invalid or expired token', 'warning')
-        return redirect(url_for('users.profile'))
+        return redirect(url_for('main.index'))
 
     user.roles.append(Role.query.filter_by(name='Student').first())
     db.session.add(user)
@@ -76,7 +76,7 @@ def login():
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             if next_page is None or url_parse(next_page).netloc != '':
-                next_page = url_for('main.home')
+                next_page = url_for('main.index')
             return redirect(next_page)
         flash('Login unsuccessful. Please check email and password', 'danger')
 
@@ -90,7 +90,7 @@ def login():
 @users.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('main.home'))
+    return redirect(url_for('main.index'))
 
 
 def image_file(user: User):
@@ -106,7 +106,7 @@ def user(username: str):
     user = User.query.filter_by(username=username).first()
     if user is None:
         flash(f'User {username} not found', 'danger')
-        return redirect(url_for('main.home'))
+        return redirect(url_for('main.index'))
     if user == current_user:
         return redirect(url_for('users.profile'))
 
@@ -145,44 +145,32 @@ def profile():
     return render_template('users/profile.html', **context)
 
 
-@users.route('/follow/<string:username>', methods=['POST'])
+@users.route('/follow/<string:username>', methods=['GET', 'POST'])
 @login_required
 def follow(username: str):
     form = EmptyForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=username).first()
-        if user is None:
-            flash(f'User {username} not found', 'danger')
-            return redirect(url_for('main.home'))
-        if user == current_user:
-            flash('You cannot follow yourself!', 'warning')
-            return redirect(url_for('users.profile'))
         current_user.follow(user)
         db.session.commit()
         flash(f'You are following {username}', 'success')
         return redirect(url_for('users.user', username=username))
     else:
-        return redirect(url_for('main.home'))
+        return redirect(url_for('main.index'))
 
 
-@users.route('/unfollow/<string:username>', methods=['POST'])
+@users.route('/unfollow/<string:username>', methods=['GET', 'POST'])
 @login_required
 def unfollow(username: str):
     form = EmptyForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=username).first()
-        if user is None:
-            flash(f'User {username} not found', 'danger')
-            return redirect(url_for('main.home'))
-        if user == current_user:
-            flash('You cannot unfollow yourself!')
-            return redirect(url_for('users.profile'))
         current_user.unfollow(user)
         db.session.commit()
         flash(f'You are not following {username}', 'success')
         return redirect(url_for('users.user', username=username))
     else:
-        return redirect(url_for('main.home'))
+        return redirect(url_for('main.index'))
 
 
 @users.route('/users/<string:username>/posts')
@@ -192,7 +180,7 @@ def user_posts(username: str):
     posts = Post.query.filter_by(author=user)\
         .order_by(Post.date.desc())\
         .paginate(page=page, per_page=5)
-    return render_template('users/user_posts.html', user=user, posts=posts, view='main.home')
+    return render_template('users/user_posts.html', user=user, posts=posts)
 
 
 @users.route('/reset_request', methods=['GET', 'POST'])

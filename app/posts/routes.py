@@ -17,13 +17,13 @@ def post(post_id: int):
     return render_template('posts/post.html', post=post, title=post.title)
 
 
-@posts.route('/tag/<int:tag_id>')
+@posts.route('/tags/<int:tag_id>')
 def tag(tag_id: int):
     page = request.args.get('page', 1, type=int)
     tag = Tag.query.get_or_404(tag_id)
     posts = tag.posts.order_by(Post.date.desc())\
         .paginate(page=page, per_page=5)
-    return render_template('main/index.html', posts=posts, view='main.index')
+    return render_template('main/index.html', posts=posts)
 
 
 def make_tags(data: str, delimiter: str = ',') -> Iterable[Tag]:
@@ -40,9 +40,11 @@ def make_tags(data: str, delimiter: str = ',') -> Iterable[Tag]:
 def create_post():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(title=form.title.data,
-                    content=form.content.data,
-                    author=current_user)
+        post = Post(
+            title=form.title.data,
+            content=form.content.data,
+            author=current_user
+        )
         tags = [tag for tag in make_tags(form.tags.data)]
         post.tags.extend(tags)
 

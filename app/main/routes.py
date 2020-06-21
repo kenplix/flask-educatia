@@ -21,12 +21,7 @@ def index():
     posts = Post.query
     if query := request.args.get('query'):
         posts = search_filter(posts, query)
-
-    context = {
-        'posts': paginate(page, posts),
-        'view': 'main.index'
-    }
-    return render_template('main/index.html', **context)
+    return render_template('main/index.html', posts=paginate(page, posts))
 
 
 @main.route('/home')
@@ -36,12 +31,7 @@ def home():
     posts = current_user.followed_posts()
     if query := request.args.get('query'):
         posts = search_filter(posts, query)
-
-    context = {
-        'posts': paginate(page, posts),
-        'view': 'main.home'
-    }
-    return render_template('main/index.html', **context)
+    return render_template('main/home.html', posts=paginate(page, posts))
 
 
 @main.route('/about')
