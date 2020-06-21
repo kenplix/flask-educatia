@@ -5,7 +5,7 @@ from flask import current_app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
-from app import db, bcrypt, login_manager
+from app.extensions import db, bcrypt, login_manager
 
 UserRole = db.Table(
     'user_role',

@@ -11,7 +11,7 @@ class AdminMixin:
     def inaccessible_callback(self, name, **kwargs):
         if current_user.is_authenticated:
             abort(403)
-        return redirect(url_for('users.login', next=request.url))
+        return redirect(url_for('auth.login', next=request.url))
 
 
 class AdminView(AdminMixin, ModelView):

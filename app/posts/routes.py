@@ -1,10 +1,20 @@
+'''
+
+Creates the 'posts' blueprint, and define its endpoints.
+
+Author:     Aleksandr Tolstoy <aleksandr13tolstoy@gmail.com>
+Created:    June, 2020
+Modified:   -
+
+'''
+
 from typing import Iterable
 
 from flask import (render_template, url_for, flash,
                    redirect, request, abort, Blueprint)
 from flask_login import current_user, login_required
 
-from app import db
+from app.extensions import db
 from app.models import Post, Tag
 from app.posts.forms import PostForm
 
