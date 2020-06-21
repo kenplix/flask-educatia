@@ -18,7 +18,7 @@ migrate = Migrate()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 login_manager.login_message_category = 'info'
-login_manager.login_view = 'users.login'
+login_manager.login_view = 'auth.login'
 mail = Mail()
 admin = Admin(
     url='/',
@@ -65,12 +65,8 @@ def create_app(config_cls=BaseConfig):
     app = Flask(__name__)
     app.config.from_object(config_cls)
 
-    db.init_app(app)
-    migrate.init_app(app, db)
-    bcrypt.init_app(app)
-    login_manager.init_app(app)
-    mail.init_app(app)
-    admin.init_app(app)
+    for ext in db, migrate, bcrypt, login_manager, mail, admin:
+        ext.init_app(app)
 
     if not app.debug:
         logged(app)
@@ -125,10 +121,11 @@ def create_app(config_cls=BaseConfig):
         admin.add_view(AdminView(model, db.session))
 
     from app.main.routes import main
+    from app.auth.routes import auth
     from app.users.routes import users
     from app.posts.routes import posts
     from app.errors.handlers import errors
-    for blueprint in main, users, posts, errors:
+    for blueprint in main, auth, users, posts, errors:
         app.register_blueprint(blueprint)
 
     return app

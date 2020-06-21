@@ -15,23 +15,20 @@
       {% endif %}
       <a class="btn btn-outline-info" href="{{ url_for('users.user_posts', username=user.username) }}" role="button">Posts</a>
     </div>
+    <!-- Follow/Unfollow Buttons -->
     {% if current_user.is_authenticated %}
       <div>
-          {% if current_user.is_following(user) %}
-          <p>
-            <form action="{{ url_for('users.unfollow', username=user.username) }}" method="POST">
-              {{ form.hidden_tag() }}
-              {{ form.submit(value="Unfollow", class="btn btn-outline-danger") }}
-            </form>
-          </p>
-          {% else %}
-          <p>
-            <form action="{{ url_for('users.follow', username=user.username) }}" method="POST">
-              {{ form.hidden_tag() }}
-              {{ form.submit(value="Follow", class="btn btn-outline-success") }}
-            </form>
-          </p>
-          {% endif %}
+      {% if current_user.is_following(user) %}
+        <form action="{{ url_for('users.unfollow', username=user.username) }}" method="POST">
+          {{ form.hidden_tag() }}
+          {{ form.submit(value='Unfollow', class='btn btn-outline-danger') }}
+        </form>
+      {% else %}
+        <form action="{{ url_for('users.follow', username=user.username) }}" method="POST">
+          {{ form.hidden_tag() }}
+          {{ form.submit(value='Follow', class='btn btn-outline-success') }}
+        </form>
+      {% endif %}
       </div>
     {% endif %}
   </div>

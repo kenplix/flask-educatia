@@ -6,28 +6,24 @@
     <!-- CSRF token -->
     {{ form.hidden_tag() }}
     <fieldset class="form-group">
-      <legend class="border-bottom mb-4">Login to existing account</legend>
+      <legend class="border-bottom mb-4">Create new account</legend>
+      <!-- Username -->
+      {{ field_info(form.username) }}
       <!-- Email -->
       {{ field_info(form.email) }}
       <!-- Password -->
       {{ field_info(form.password) }}
-      <!-- Remember Me -->
-      <div class="form-check">
-        {{ form.remember(class="form-check-input") }}
-        {{ form.remember.label(class="form-check-label") }}
-      </div>
+      <!-- Confirm the Password -->
+      {{ field_info(form.confirm) }}
     </fieldset>
     <div class="form-group">
-      {{ form.submit(class="btn btn-outline-info") }}
-      <small class="text-muted">
-        <a class="ml-2" href="{{ url_for('users.reset_request') }}">Forgot Password?</a>
-      </small>
+      {{ form.submit(class='btn btn-outline-info') }}
     </div>
   </form>
 </div>
 <div class="border-top pt-3">
   <small class="text-muted">
-    Need An Account?<a class='ml-2' href="{{ url_for('users.register') }}">Sign Up Now</a>
+    Already Have An Account?<a class='ml-2' href="{{ url_for('auth.login') }}">Sign In</a>
   </small>
 </div>
 {% endblock content %}

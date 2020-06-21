@@ -1,15 +1,15 @@
 {% macro field_info(field) %}
 <div class="form-group">
-  {{ field.label(class="form-control-label") }}
+  {{ field.label(class='form-control-label') }}
   {% if field.errors %}
-    {{ field(class="form-control form-control-lg is-invalid") }}
+    {{ field(class='form-control form-control-lg is-invalid') }}
     <div class="invalid-feedback">
       {% for error in field.errors %}
         <span>{{ error }}</span>
       {% endfor %}
     </div>
   {% else %}
-    {{ field(class="form-control form-control-lg") }}
+    {{ field(class='form-control form-control-lg') }}
   {% endif %}
 </div>
 {% endmacro %}
@@ -17,11 +17,11 @@
 {% macro pagination(view) %}
 {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
   {% if page_num %}
-      {% if posts.page == page_num %}
-        <a class="btn btn-info mb-4" href="{{ url_for(view, page=page_num) }}">{{ page_num }}</a>
-      {% else %}
-        <a class="btn btn-outline-info mb-4" href="{{ url_for(view, page=page_num) }}">{{ page_num }}</a>
-      {% endif %}
+    {% if posts.page == page_num %}
+      <a class="btn btn-info mb-4" href="{{ url_for(view, page=page_num) }}">{{ page_num }}</a>
+    {% else %}
+      <a class="btn btn-outline-info mb-4" href="{{ url_for(view, page=page_num) }}">{{ page_num }}</a>
+    {% endif %}
   {% else %}
     ...
   {% endif %}
