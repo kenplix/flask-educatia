@@ -1,7 +1,6 @@
 '''
 
-Create error handlers with their own templates for each of the status
-codes we care about.
+Creates error handlers with their own templates for each of the status codes.
 
 Author:     Aleksandr Tolstoy <aleksandr13tolstoy@gmail.com>
 Created:    June, 2020
@@ -14,7 +13,7 @@ from flask import render_template
 
 def error_templates(app):
     '''
-    Register 0 or more custom error pages. Note that this function mutates the
+    Registers custom error pages. Note that this function mutates the
     provided 'app' parameter.
 
     :param app: Flask application instance

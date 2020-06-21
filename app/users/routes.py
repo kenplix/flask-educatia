@@ -1,3 +1,13 @@
+'''
+
+Creates the 'users' blueprint, and define its endpoints.
+
+Author:     Aleksandr Tolstoy <aleksandr13tolstoy@gmail.com>
+Created:    June, 2020
+Modified:   -
+
+'''
+
 import os
 import secrets
 from functools import partial
@@ -8,7 +18,7 @@ from flask import (render_template, current_app, url_for, flash,
                    redirect, request, Blueprint)
 from flask_login import current_user, login_required
 
-from app import db
+from app.extensions import db
 from app.models import User, Post
 from app.users.forms import UpdateProfileForm, EmptyForm
 

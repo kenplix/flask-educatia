@@ -1,3 +1,13 @@
+'''
+
+Creates the 'auth' blueprint, and define its endpoints.
+
+Author:     Aleksandr Tolstoy <aleksandr13tolstoy@gmail.com>
+Created:    June, 2020
+Modified:   -
+
+'''
+
 from threading import Thread
 
 from flask_mail import Message
@@ -6,7 +16,7 @@ from flask import (render_template, current_app, url_for, flash,
 from werkzeug.urls import url_parse
 from flask_login import login_user, current_user, logout_user
 
-from app import db, mail
+from app.extensions import db, mail
 from app.models import User, Role
 from app.auth.forms import RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm
 
