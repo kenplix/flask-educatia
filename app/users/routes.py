@@ -1,15 +1,16 @@
+import os
+import secrets
+from functools import partial
 from datetime import datetime
 
-from flask import (render_template, url_for, flash,
+from PIL import Image
+from flask import (render_template, current_app, url_for, flash,
                    redirect, request, Blueprint)
-from werkzeug.urls import url_parse
-from flask_login import login_user, current_user, logout_user, login_required
+from flask_login import current_user, login_required
 
 from app import db
-from app.models import User, Role, Post
-from app.users.forms import (RegistrationForm, LoginForm, UpdateProfileForm,
-                             RequestResetForm, ResetPasswordForm, EmptyForm)
-from app.users.utils import change_profile_picture, send_token
+from app.models import User, Post
+from app.users.forms import UpdateProfileForm, EmptyForm
 
 users = Blueprint('users', __name__)
 
@@ -21,76 +22,24 @@ def before_request():
         db.session.commit()
 
 
-@users.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('main.home'))
+def change_profile_picture(picture) -> str:
+    picture_path = partial(
+        os.path.join,
+        current_app.root_path,
+        'static/images/profile_pics'
+    )
+    if current_user.image_file != 'default.jpg':
+        os.remove(picture_path(current_user.image_file))
 
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        user = User(
-            username=form.username.data,
-            email=form.email.data,
-            password=form.password.data
-        )
-        db.session.add(user)
-        db.session.commit()
-        send_token(
-            user=user,
-            subject='Account Activation Request',
-            template='mail/activate_account.html'
-        )
-        flash('An email has been send with instructions to activate your account', 'info')
-        return redirect(url_for('users.login'))
+    random_hex = secrets.token_hex(16)
+    _, file_ext = os.path.splitext(picture.filename)
+    picture_filename = random_hex + file_ext
 
-    context = {
-        'form': form,
-        'title': 'Register'
-    }
-    return render_template('users/register.html', **context)
-
-
-@users.route('/activate_account/<string:token>', methods=['GET', 'POST'])
-def activate_account(token: str):
-    user = User.verify_token(token)
-    if user is None:
-        flash('That is an invalid or expired token', 'warning')
-        return redirect(url_for('main.index'))
-
-    user.roles.append(Role.query.filter_by(name='Student').first())
-    db.session.add(user)
-    db.session.commit()
-    flash(f'Your account has been activated', 'success')
-    return redirect(url_for('users.login'))
-
-
-@users.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('main.home'))
-
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and user.verify_password(form.password.data):
-            login_user(user, remember=form.remember.data)
-            next_page = request.args.get('next')
-            if next_page is None or url_parse(next_page).netloc != '':
-                next_page = url_for('main.index')
-            return redirect(next_page)
-        flash('Login unsuccessful. Please check email and password', 'danger')
-
-    context = {
-        'form': form,
-        'title': 'Login'
-    }
-    return render_template('users/login.html', **context)
-
-
-@users.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('main.index'))
+    output_size = (125, 125)
+    image = Image.open(picture)
+    image.thumbnail(output_size)
+    image.save(picture_path(picture_filename))
+    return picture_filename
 
 
 def image_file(user: User):
@@ -181,49 +130,3 @@ def user_posts(username: str):
         .order_by(Post.date.desc())\
         .paginate(page=page, per_page=5)
     return render_template('users/user_posts.html', user=user, posts=posts)
-
-
-@users.route('/reset_request', methods=['GET', 'POST'])
-def reset_request():
-    if current_user.is_authenticated:
-        return redirect(url_for('main.home'))
-
-    form = RequestResetForm()
-    if form.validate_on_submit():
-        send_token(
-            user=User.query.filter_by(email=form.email.data).first(),
-            subject='Password Reset Request',
-            template='mail/reset_password.html'
-        )
-        flash('An email has been send with instructions to reset your password', 'info')
-        return redirect(url_for('users.login'))
-
-    context = {
-        'form': form,
-        'title': 'Reset Password'
-    }
-    return render_template('users/reset_request.html', **context)
-
-
-@users.route('/reset_password/<string:token>', methods=['GET', 'POST'])
-def reset_password(token: str):
-    if current_user.is_authenticated:
-        return redirect(url_for('main.home'))
-
-    user = User.verify_token(token)
-    if user is None:
-        flash('That is an invalid or expired token', 'warning')
-        return redirect(url_for('users.reset_request'))
-
-    form = ResetPasswordForm()
-    if form.validate_on_submit():
-        user.password = form.password.data
-        db.session.commit()
-        flash('Your password has been changed. You are now able to sign in', 'success')
-        return redirect(url_for('users.login'))
-
-    context = {
-        'form': form,
-        'title': 'Reset Password'
-    }
-    return render_template('users/reset_password.html', **context)
