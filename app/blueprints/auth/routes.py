@@ -16,9 +16,9 @@ from flask import (render_template, current_app, url_for, flash,
 from werkzeug.urls import url_parse
 from flask_login import login_user, current_user, logout_user
 
+from .forms import RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm
 from app.extensions import db, mail
 from app.models import User, Role
-from app.auth.forms import RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm
 
 auth = Blueprint('auth', __name__)
 

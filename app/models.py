@@ -5,7 +5,7 @@ from flask import current_app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
-from app.extensions import db, bcrypt, login_manager
+from .extensions import db, bcrypt, login_manager
 
 UserRole = db.Table(
     'user_role',
@@ -147,3 +147,11 @@ class Tag(db.Model):
 
     def __repr__(self):
         return f'Tag #{self.id} <{self.name}>'
+
+
+models = (
+    User,
+    Role,
+    Post,
+    Tag
+)
