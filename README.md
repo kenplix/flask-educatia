@@ -22,9 +22,7 @@ MAIL_PASSWORD=<Password for $MAIL_USERNAME@$MAIL_SERVER>
 ADMIN_EMAIL=no-reply@gmail.com
 ADMIN_PASSWORD=<Password for no-reply@gmail.com>
 ```  
-SECRET_KEY is used for cryptographically signing cookies, which in turn are used for sessions. This means that cookies cannot  
-be modified by anybody who does not possess the secret key. In production, SECRET_KEY should be set to a securely randomized  
-string. You can easily generate one using Python by opening a REPL (running python in your terminal) and entering: 
+SECRET_KEY is used for cryptographically signing cookies, which in turn are used for sessions. This means that cookies cannot be modified by anybody who does not possess the secret key. In production, SECRET_KEY should be set to a securely randomized string. You can easily generate one using Python by opening a REPL (running python in your terminal) and entering:  
 ```python
 >>> import binascii
 >>> import os
@@ -37,12 +35,9 @@ MAIL_SERVER=smtp.googlemail.com
 MAIL_PORT=587
 MAIL_USE_TLS=True
 ```
-The security features in your Gmail account may prevent the application from sending emails  
-through it unless you explicitly allow "less secure apps" access to your Gmail account. You can  
-read about this [here](https://support.google.com/accounts/answer/6010255?hl=en), and if you are concerned about the security of your account, you can create  
-a secondary account that you configure just for newsletters emails. 
+The security features in your Gmail account may prevent the application from sending emails through it unless you explicitly allow "less secure apps" access to your Gmail account. You can read about this [here](https://support.google.com/accounts/answer/6010255?hl=en), and if you are   concerned about the security of your account, you can create a secondary account that you configure just for newsletters emails. 
 
-6. Initialize database: ```flask init-db``` 
+6. Initialize database: ```flask create-db``` 
 7. Create all roles: ```flask create-roles```  
 8. Create the first admin to access the admin panel: ```flask create-admin```  
 9. Run the application: ```flask run```  
