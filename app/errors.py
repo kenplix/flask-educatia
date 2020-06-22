@@ -25,7 +25,6 @@ def error_templates(app):
           Source: http://stackoverflow.com/a/30108946
 
         :param status: Status as a written name
-        :return: None
         '''
 
         code = getattr(status, 'code', 500)

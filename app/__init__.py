@@ -1,8 +1,6 @@
 '''
 
-Defines application factory function
-
-Performs configuration from settings class.
+Defines application factory function.
 
 Author:     Aleksandr Tolstoy <aleksandr13tolstoy@gmail.com>
 Created:    June, 2020
@@ -17,9 +15,12 @@ from logging.handlers import SMTPHandler, RotatingFileHandler
 from flask import Flask
 
 from config import BaseConfig
-from app.extensions import db, migrate, bcrypt, login_manager, mail, admin
-from app.errors import error_templates
-from app.admin import AdminView
+from .errors import error_templates
+from .extensions import db, admin, extensions
+from .commands import commands
+from .models import models
+from .blueprints import blueprints
+from .admin import AdminView
 
 
 def logger(app):
@@ -28,6 +29,7 @@ def logger(app):
     mutates the provided 'app' parameter.
 
     :param app: Flask application instance
+    :return: None
     '''
     if app.config['MAIL_SERVER']:
         auth = None
@@ -57,7 +59,9 @@ def logger(app):
     )
     file_handler.setLevel(app.config['LOGGING_LEVEL'])
     file_handler.setFormatter(logging.Formatter(app.config['LOGGING_FORMAT']))
+
     app.logger.addHandler(file_handler)
+    app.logger.setLevel(app.config['LOGGING_LEVEL'])
     app.logger.info('Educatia startup')
 
 
@@ -74,24 +78,21 @@ def create_app(config_cls=BaseConfig):
     app = Flask(__name__)
     app.config.from_object(config_cls)
 
-    for ext in db, migrate, bcrypt, login_manager, mail, admin:
-        ext.init_app(app)
-
-    # Creates handlers for all necessary HTTP errors.
     error_templates(app)
 
     if not app.debug:
         logger(app)
 
-    from app.models import User, Role, Post, Tag
-    for model in User, Role, Post, Tag:
+    for extension in extensions:
+        extension.init_app(app)
+
+    for command in commands:
+        app.cli.add_command(command)
+
+    for model in models:
         admin.add_view(AdminView(model, db.session))
 
-    from app.main.routes import main
-    from app.auth.routes import auth
-    from app.users.routes import users
-    from app.posts.routes import posts
-    for blueprint in auth, main, posts, users:
+    for blueprint in blueprints:
         app.register_blueprint(blueprint)
 
     return app

@@ -18,9 +18,9 @@ from flask import (render_template, current_app, url_for, flash,
                    redirect, request, Blueprint)
 from flask_login import current_user, login_required
 
+from .forms import UpdateProfileForm, EmptyForm
 from app.extensions import db
 from app.models import User, Post
-from app.users.forms import UpdateProfileForm, EmptyForm
 
 users = Blueprint('users', __name__)
 
