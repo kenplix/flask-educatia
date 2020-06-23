@@ -41,16 +41,22 @@ tree -d
 ```
 # Running the Application
 1. Clone this repository.  
-```git clone https://github.com/AleksandrTolstoy/flask-educatia.git```  
+```
+git clone https://github.com/AleksandrTolstoy/flask-educatia.git
+```  
 2. Create virtual environment in repository.  
 ```
 cd flask-educatia
 python3 -m venv venv
 ```  
 3. Activate virtual environment.  
-```source venv/bin/activate```  
+```
+source venv/bin/activate
+```  
 4. Install requirements.  
-```python3 -m pip install -r requirements.txt```  
+```
+python3 -m pip install -r requirements.txt
+```  
 5. Set up the configuration data in ```.env``` file as shown below:   
 ```
 SECRET_KEY=<Your first secret string>
@@ -83,11 +89,19 @@ MAIL_USE_TLS=True
 The security features in your Gmail account may prevent the application from sending emails through it unless you explicitly allow "less secure apps" access to your Gmail account. You can read about this [here](https://support.google.com/accounts/answer/6010255?hl=en), and if you are   concerned about the security of your account, you can create a secondary account that you configure just for newsletters emails. 
 
 6. Initialize database.  
-```flask create-db```  
+```
+flask create-db
+```  
 7. Create all roles.  
-```flask create-roles```  
+```
+flask create-roles
+```  
 8. Create the first admin to access the admin panel.  
-```flask create-admin```  
+```
+flask create-admin
+```  
 9. Run the application.  
-```flask run```  
+```
+flask run
+```  
 10. Open your web-browser at [http://127.0.0.1:5000/login], you should be redirected to the login page.  
