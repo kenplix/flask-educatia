@@ -19,6 +19,7 @@ from flask import (render_template, current_app, url_for, flash,
 from flask_login import current_user, login_required
 
 from .forms import UpdateProfileForm, EmptyForm
+from ..main.navigation_tools import paginate
 from app.extensions import db
 from app.models import User, Post
 
@@ -136,7 +137,9 @@ def unfollow(username: str):
 def user_posts(username: str):
     page = request.args.get('page', 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
-    posts = Post.query.filter_by(author=user)\
-        .order_by(Post.date.desc())\
-        .paginate(page=page, per_page=5)
-    return render_template('users/user_posts.html', user=user, posts=posts)
+
+    context = {
+        'user': user,
+        'posts': paginate(page, Post.query.filter_by(author=user)),
+    }
+    return render_template('users/user_posts.html', **context)

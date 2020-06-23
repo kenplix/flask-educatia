@@ -15,6 +15,7 @@ from flask import (render_template, url_for, flash,
 from flask_login import current_user, login_required
 
 from .forms import PostForm
+from ..main.navigation_tools import paginate
 from app.extensions import db
 from app.models import Post, Tag
 
@@ -31,9 +32,7 @@ def post(post_id: int):
 def tag(tag_id: int):
     page = request.args.get('page', 1, type=int)
     tag = Tag.query.get_or_404(tag_id)
-    posts = tag.posts.order_by(Post.date.desc())\
-        .paginate(page=page, per_page=5)
-    return render_template('main/index.html', posts=posts)
+    return render_template('main/index.html', posts=paginate(page, tag.posts))
 
 
 def make_tags(data: str, delimiter: str = ',') -> Iterable[Tag]:
