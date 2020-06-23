@@ -1,12 +1,57 @@
-# Description
+# Summary
 Education platform for students and tutors written on Flask. 
 
-# How to run?
-1. Clone or download this repository  
-2. Create virtual environment in repository: ```python3 -m venv venv```  
-3. Activate virtual environment: ```source venv/bin/activate```  
-4. Install requirements: ```python3 -m pip install -r requirements.txt``` 
-5. Set up the configuration data in ```.env``` file as shown below:  
+This also demonstrates practical uses of several Flask modules such as:
+* Flask-Admin
+* Flask-Bcrypt
+* Flask-Login
+* Flask-Mail
+* Flask-Migrate
+* Flask-Script
+* Flask-SQLAlchemy
+* Flask-WTF
+
+# Implementation Notes
+The application follows the guidelines from [Flask Patterns for Large Applications](http://flask.pocoo.org/docs/patterns/packages/) using blueprints and decorators. It uses HTML5 Boilerplate and Bootstrap for the basic layout and design.
+
+The project is structured as follows, following a modular-based approach:  
+```
+tree -d
+.
+├── app
+│   ├── blueprints
+│   │   ├── auth
+│   │   ├── main
+│   │   ├── posts
+│   │   └── users
+│   ├── static
+│   │   ├── css
+│   │   ├── images
+│   │   │   └── profile_pics
+│   │   └── js
+│   └── templates
+│       ├── auth
+│       ├── errors
+│       ├── main
+│       ├── posts
+│       └── users
+├── logs
+└─── migrations
+     └── versions
+```
+# Running the Application
+1. Clone this repository.  
+```git clone https://github.com/AleksandrTolstoy/flask-educatia.git```  
+2. Create virtual environment in repository.  
+```
+cd flask-educatia
+python3 -m venv venv
+```  
+3. Activate virtual environment.  
+```source venv/bin/activate```  
+4. Install requirements.  
+```python3 -m pip install -r requirements.txt```  
+5. Set up the configuration data in ```.env``` file as shown below:   
 ```
 SECRET_KEY=<Your first secret string>
 CSRF_SESSION_KEY=<Your second secret string>
@@ -29,7 +74,7 @@ SECRET_KEY is used for cryptographically signing cookies, which in turn are used
 >>> binascii.hexlify(os.urandom(24))
 ```
 Examples of how to set SQLALCHEMY_DATABASE_URI can be seen [here](https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/ "Flask-Sqlalchemy documentation").  
-#### Configuration sample to use your Gmail account's email server. 
+**Configuration sample to use your Gmail account's email server.**  
 ```
 MAIL_SERVER=smtp.googlemail.com
 MAIL_PORT=587
@@ -37,8 +82,12 @@ MAIL_USE_TLS=True
 ```
 The security features in your Gmail account may prevent the application from sending emails through it unless you explicitly allow "less secure apps" access to your Gmail account. You can read about this [here](https://support.google.com/accounts/answer/6010255?hl=en), and if you are   concerned about the security of your account, you can create a secondary account that you configure just for newsletters emails. 
 
-6. Initialize database: ```flask create-db``` 
-7. Create all roles: ```flask create-roles```  
-8. Create the first admin to access the admin panel: ```flask create-admin```  
-9. Run the application: ```flask run```  
+6. Initialize database.  
+```flask create-db```  
+7. Create all roles.  
+```flask create-roles```  
+8. Create the first admin to access the admin panel.  
+```flask create-admin```  
+9. Run the application.  
+```flask run```  
 10. Open your web-browser at [http://127.0.0.1:5000/login], you should be redirected to the login page.  
