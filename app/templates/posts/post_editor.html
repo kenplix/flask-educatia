@@ -10,14 +10,14 @@
       <!-- Title -->
       {{ field_info(form.title) }}
       <!-- CKEditor 5 -->
-      <div id="editor">
+      <textarea name="content" id="editor">
         <p>This is some sample content.</p>
-      </div>
+      </textarea>
       <script src="https://cdn.ckeditor.com/ckeditor5/19.1.1/classic/ckeditor.js"></script>
       <script>
         ClassicEditor
-            .create( document.querySelector('#editor') )
-            .catch( error => {
+            .create(document.querySelector('#editor'))
+            .catch(error => {
                 console.error(error);
             });
       </script>

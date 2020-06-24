@@ -9,11 +9,6 @@ class PostForm(FlaskForm):
         validators=[DataRequired()]
     )
 
-    content = TextAreaField(
-        'Content',
-        validators=[DataRequired()]
-    )
-
     tags = StringField(
         'Tags',
         validators=[Optional()]
