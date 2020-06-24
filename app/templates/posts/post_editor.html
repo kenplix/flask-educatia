@@ -9,8 +9,18 @@
       <legend class="border-bottom mb-4">{{ legend }}</legend>
       <!-- Title -->
       {{ field_info(form.title) }}
-      <!-- Content -->
-      {{ field_info(form.content) }}
+      <!-- CKEditor 5 -->
+      <div id="editor">
+        <p>This is some sample content.</p>
+      </div>
+      <script src="https://cdn.ckeditor.com/ckeditor5/19.1.1/classic/ckeditor.js"></script>
+      <script>
+        ClassicEditor
+            .create( document.querySelector('#editor') )
+            .catch( error => {
+                console.error(error);
+            });
+      </script>
       <!-- Tags -->
       {{ field_info(form.tags) }}
     </fieldset>
