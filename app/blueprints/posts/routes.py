@@ -51,7 +51,7 @@ def create_post():
     if form.validate_on_submit():
         post = Post(
             title=form.title.data,
-            content=request.form.get('content'),
+            content=form.content.data,
             author=current_user
         )
         tags = [tag for tag in make_tags(form.tags.data)]
