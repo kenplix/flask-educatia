@@ -14,7 +14,6 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_admin import Admin
-from flask_ckeditor import CKEditor
 
 from .admin import HomeAdminView
 
@@ -25,7 +24,6 @@ login_manager = LoginManager()
 login_manager.login_message_category = 'info'
 login_manager.login_view = 'auth.login'
 mail = Mail()
-ckeditor = CKEditor()
 admin = Admin(
     url='/',
     name='Educatia',
@@ -38,6 +36,5 @@ extensions = (
     bcrypt,
     login_manager,
     mail,
-    ckeditor,
     admin
 )
