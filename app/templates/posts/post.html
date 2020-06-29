@@ -18,7 +18,7 @@
       {% endfor %}
     </div>
     <h2 class="article-title">{{ post.title }}</h2>
-    <p class="article-content">{{ post.content }}</p>
+    <p class="article-content">{{ post.content | safe }}</p>
   </div>
 </article>
 <!-- Modal -->
