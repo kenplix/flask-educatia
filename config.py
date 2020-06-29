@@ -19,10 +19,8 @@ class BaseConfig:
 
     # Flask settings:
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    DEBUG = False
+    DEBUG = True
     THREADS_PER_PAGE = 2
-    CSRF_ENABLED = True
-    CSRF_SESSION_KEY = os.environ.get('CSRF_SESSION_KEY')
 
     # Flask-SQLAlchemy settings:
     SQLALCHEMY_DATABASE_URI = os.environ.get(
@@ -37,6 +35,9 @@ class BaseConfig:
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS')
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+
+    # Flask-CKEditor settings:
+    CKEDITOR_PKG_TYPE = 'full'
 
     # Admin settings:
     ADMIN_USERNAME = 'Admin'

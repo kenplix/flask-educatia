@@ -1,8 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, Optional
-
-from app.wysiwyg import CKTextAreaField
+from flask_ckeditor import CKEditorField
 
 
 class PostForm(FlaskForm):
@@ -11,7 +10,7 @@ class PostForm(FlaskForm):
         validators=[DataRequired()]
     )
 
-    content = CKTextAreaField(
+    content = CKEditorField(
         'Content',
         validators=[DataRequired()]
     )
