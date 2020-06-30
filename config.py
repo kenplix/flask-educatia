@@ -39,7 +39,6 @@ class BaseConfig:
     # Flask-CKEditor settings:
     CKEDITOR_SERVE_LOCAL = True
     CKEDITOR_PKG_TYPE = 'standard'
-    CKEDITOR_ENABLE_CSRF = True
     CKEDITOR_ENABLE_CODESNIPPET = True
     CKEDITOR_CODE_THEME = 'github'
 
