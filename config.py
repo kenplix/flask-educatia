@@ -37,7 +37,11 @@ class BaseConfig:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 
     # Flask-CKEditor settings:
-    CKEDITOR_PKG_TYPE = 'full'
+    CKEDITOR_SERVE_LOCAL = True
+    CKEDITOR_PKG_TYPE = 'standard'
+    CKEDITOR_ENABLE_CSRF = True
+    CKEDITOR_ENABLE_CODESNIPPET = True
+    CKEDITOR_CODE_THEME = 'github'
 
     # Admin settings:
     ADMIN_USERNAME = 'Admin'

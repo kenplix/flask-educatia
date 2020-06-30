@@ -1,5 +1,7 @@
 {% extends 'layout.html' %}
 {% block content %}
+<!-- Load code snippets CSS theme -->
+{{ ckeditor.load_code_theme() }}
 <article class="media content-section">
   <img class="rounded-circle article-img" src="{{ url_for('static', filename='images/profile_pics/' + post.author.image_file) }}">
   <div class="media-body">
@@ -18,7 +20,7 @@
       {% endfor %}
     </div>
     <h2 class="article-title">{{ post.title }}</h2>
-    <p class="article-content">{{ post.content }}</p>
+    <p class="article-content">{{ post.content | safe }}</p>
   </div>
 </article>
 <!-- Modal -->

@@ -9,15 +9,17 @@
       <legend class="border-bottom mb-4">{{ legend }}</legend>
       <!-- Title -->
       {{ field_info(form.title) }}
-      <!-- CKEditor -->
-      {{ ckeditor.load() }}
+      <!-- Content -->
       {{ field_info(form.content) }}
       <!-- Tags -->
       {{ field_info(form.tags) }}
     </fieldset>
     <div class="form-group">
-      {{ form.submit(class="btn btn-outline-info") }}
+      {{ form.submit(class='btn btn-outline-info') }}
     </div>
   </form>
+  <!-- CKEditor -->
+  {{ ckeditor.load() }}
+  {{ ckeditor.config(name='content') }}
 </div>
 {% endblock content %}

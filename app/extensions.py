@@ -15,6 +15,7 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_admin import Admin
 from flask_ckeditor import CKEditor
+from flask_wtf.csrf import CSRFProtect
 
 from .admin import HomeAdminView
 
@@ -26,6 +27,7 @@ login_manager.login_message_category = 'info'
 login_manager.login_view = 'auth.login'
 mail = Mail()
 ckeditor = CKEditor()
+csrf = CSRFProtect()
 admin = Admin(
     url='/',
     name='Educatia',
@@ -39,5 +41,6 @@ extensions = (
     login_manager,
     mail,
     ckeditor,
+    csrf,
     admin
 )
