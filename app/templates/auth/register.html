@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-{% from 'macros.html' import field_info with context %}
+{% from 'macros.html' import render_field with context %}
 {% block content %}
 <div class="content-section">
   <form method="POST" action="">
@@ -8,13 +8,13 @@
     <fieldset class="form-group">
       <legend class="border-bottom mb-4">Create new account</legend>
       <!-- Username -->
-      {{ field_info(form.username) }}
+      {{ render_field(form.username) }}
       <!-- Email -->
-      {{ field_info(form.email) }}
+      {{ render_field(form.email) }}
       <!-- Password -->
-      {{ field_info(form.password) }}
+      {{ render_field(form.password) }}
       <!-- Confirm the Password -->
-      {{ field_info(form.confirm) }}
+      {{ render_field(form.confirm) }}
     </fieldset>
     <div class="form-group">
       {{ form.submit(class='btn btn-outline-info') }}

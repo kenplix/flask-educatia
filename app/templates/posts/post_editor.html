@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-{% from 'macros.html' import field_info with context %}
+{% from 'macros.html' import render_field with context %}
 {% block content %}
 <div class="content-section">
   <form method="POST" action="">
@@ -8,11 +8,11 @@
     <fieldset class="form-group">
       <legend class="border-bottom mb-4">{{ legend }}</legend>
       <!-- Title -->
-      {{ field_info(form.title) }}
+      {{ render_field(form.title) }}
       <!-- Content -->
-      {{ field_info(form.content) }}
+      {{ render_field(form.content) }}
       <!-- Tags -->
-      {{ field_info(form.tags) }}
+      {{ render_field(form.tags) }}
     </fieldset>
     <div class="form-group">
       {{ form.submit(class='btn btn-outline-info') }}

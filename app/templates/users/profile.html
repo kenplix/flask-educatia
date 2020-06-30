@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-{% from 'macros.html' import field_info with context %}
+{% from 'macros.html' import render_field with context %}
 {% block content %}
 <div class="content-section">
   <div class="media">
@@ -20,11 +20,11 @@
       <fieldset class="form-group">
         <legend class="border-bottom mb-4">Profile Info</legend>
         <!-- Username -->
-        {{ field_info(form.username) }}
+        {{ render_field(form.username) }}
         <!-- About Me -->
-        {{ field_info(form.about_me) }}
+        {{ render_field(form.about_me) }}
         <!-- Email -->
-        {{ field_info(form.email) }}
+        {{ render_field(form.email) }}
         <!-- Profile Picture -->
         <div class="form-group">
           {{ form.picture.label() }}

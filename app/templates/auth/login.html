@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-{% from 'macros.html' import field_info with context %}
+{% from 'macros.html' import render_field with context %}
 {% block content %}
 <div class="content-section">
   <form method="POST" action="">
@@ -8,9 +8,9 @@
     <fieldset class="form-group">
       <legend class="border-bottom mb-4">Login to existing account</legend>
       <!-- Email -->
-      {{ field_info(form.email) }}
+      {{ render_field(form.email) }}
       <!-- Password -->
-      {{ field_info(form.password) }}
+      {{ render_field(form.password) }}
       <!-- Remember Me -->
       <div class="form-check">
         {{ form.remember(class='form-check-input') }}
