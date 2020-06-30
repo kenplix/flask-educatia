@@ -12,8 +12,10 @@ BAD_VALIDATION = 'That {} is taken. Please choose a different one'
 class UpdateProfileForm(FlaskForm):
     username = StringField(
         'Username',
-        validators=[DataRequired(),
-                    Length(min=3, max=25)]
+        validators=[
+            DataRequired(),
+            Length(min=3, max=25)
+        ]
     )
 
     about_me = TextAreaField(
@@ -23,8 +25,10 @@ class UpdateProfileForm(FlaskForm):
 
     email = StringField(
         'Email',
-        validators=[DataRequired(),
-                    Email()]
+        validators=[
+            DataRequired(),
+            Email()
+        ]
     )
 
     picture = FileField(

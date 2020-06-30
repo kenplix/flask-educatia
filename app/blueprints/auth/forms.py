@@ -10,20 +10,26 @@ BAD_VALIDATION = 'That {} is taken. Please choose a different one'
 class RegistrationForm(FlaskForm):
     username = StringField(
         'Username',
-        validators=[DataRequired(),
-                    Length(min=3, max=25)]
+        validators=[
+            DataRequired(),
+            Length(min=3, max=25)
+        ]
     )
 
     email = StringField(
         'Email',
-        validators=[DataRequired(),
-                    Email()]
+        validators=[
+            DataRequired(),
+            Email()
+        ]
     )
 
     password = PasswordField(
         'Password',
-        validators=[DataRequired(),
-                    EqualTo('confirm', message='Passwords must match')]
+        validators=[
+            DataRequired(),
+            EqualTo('confirm', message='Passwords must match')
+        ]
     )
 
     confirm = PasswordField(
@@ -45,8 +51,10 @@ class RegistrationForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField(
         'Email',
-        validators=[DataRequired(),
-                    Email()]
+        validators=[
+            DataRequired(),
+            Email()
+        ]
     )
 
     password = PasswordField(
@@ -61,8 +69,10 @@ class LoginForm(FlaskForm):
 class RequestResetForm(FlaskForm):
     email = StringField(
         'Email',
-        validators=[DataRequired(),
-                    Email()]
+        validators=[
+            DataRequired(),
+            Email()
+        ]
     )
 
     submit = SubmitField('Request Password Reset')
@@ -75,8 +85,10 @@ class RequestResetForm(FlaskForm):
 class ResetPasswordForm(FlaskForm):
     password = PasswordField(
         'New Password',
-        validators=[DataRequired(),
-                    EqualTo('confirm', message='Passwords must match')]
+        validators=[
+            DataRequired(),
+            EqualTo('confirm', message='Passwords must match')
+        ]
     )
 
     confirm = PasswordField(
