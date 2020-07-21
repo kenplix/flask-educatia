@@ -1,4 +1,4 @@
-'''
+"""
 
 Defines application factory function.
 
@@ -6,7 +6,7 @@ Author:     Aleksandr Tolstoy <aleksandr13tolstoy@gmail.com>
 Created:    June, 2020
 Modified:   -
 
-'''
+"""
 
 import os
 import logging
@@ -24,13 +24,13 @@ from .admin import AdminView
 
 
 def logger(app):
-    '''
+    """
     Configures, a file and mail handler. Note that this function
     mutates the provided 'app' parameter.
 
     :param app: Flask application instance
     :return: None
-    '''
+    """
     if app.config['MAIL_SERVER']:
         auth = None
         if app.config['MAIL_USERNAME'] and app.config['MAIL_PASSWORD']:
@@ -66,14 +66,14 @@ def logger(app):
 
 
 def create_app(config_cls=BaseConfig):
-    '''
+    """
     Creates a Flask application using the app factory pattern.
 
     Loads the configuration from class which contains in the 'config.py' file.
 
     :param config_cls: Sets configuration for the current application instance.
     :return:           Flask application instance
-    '''
+    """
 
     app = Flask(__name__)
     app.config.from_object(config_cls)

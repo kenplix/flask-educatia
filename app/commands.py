@@ -1,4 +1,4 @@
-'''
+"""
 
 Defines application CLI.
 
@@ -6,7 +6,7 @@ Author:     Aleksandr Tolstoy <aleksandr13tolstoy@gmail.com>
 Created:    June, 2020
 Modified:   -
 
-'''
+"""
 
 from click import command
 from flask import current_app
@@ -19,7 +19,7 @@ from .models import User, Role
 @command(name='create-db')
 @with_appcontext
 def create_tables():
-    '''Create tables described in models.'''
+    """Create tables described in models."""
 
     db.create_all()
 
@@ -27,7 +27,7 @@ def create_tables():
 @command(name='drop-db')
 @with_appcontext
 def drop_tables():
-    '''Delete tables described in models.'''
+    """Delete tables described in models."""
 
     db.drop_all()
 
@@ -35,7 +35,7 @@ def drop_tables():
 @command(name='create-roles')
 @with_appcontext
 def create_roles():
-    '''Create all the roles necessary for the application to work.'''
+    """Create all the roles necessary for the application to work."""
 
     admin = Role(
         name='Admin',
@@ -56,10 +56,10 @@ def create_roles():
 @command(name='create-admin')
 @with_appcontext
 def create_admin():
-    '''
+    """
     Create a site administrator from .env file. Note that in another case
     it will not be possible to assign it except through the CLI
-    '''
+    """
 
     admin = User(
         username=current_app.config['ADMIN_USERNAME'],
@@ -73,9 +73,9 @@ def create_admin():
     db.session.commit()
 
 
-commands = (
+commands = [
     create_tables,
     drop_tables,
     create_roles,
     create_admin
-)
+]

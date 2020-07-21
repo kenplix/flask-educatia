@@ -1,4 +1,4 @@
-'''
+"""
 
 Creates the 'main' blueprint, and define its endpoints.
 
@@ -6,7 +6,7 @@ Author:     Aleksandr Tolstoy <aleksandr13tolstoy@gmail.com>
 Created:    June, 2020
 Modified:   -
 
-'''
+"""
 
 from flask import render_template, request, Blueprint
 from flask_login import current_user, login_required

@@ -1,4 +1,4 @@
-'''
+"""
 
 Creates the 'users' blueprint, and define its endpoints.
 
@@ -6,7 +6,7 @@ Author:     Aleksandr Tolstoy <aleksandr13tolstoy@gmail.com>
 Created:    June, 2020
 Modified:   -
 
-'''
+"""
 
 import os
 import secrets

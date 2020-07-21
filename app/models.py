@@ -149,9 +149,9 @@ class Tag(db.Model):
         return f'Tag #{self.id} <{self.name}>'
 
 
-models = (
+models = [
     User,
     Role,
     Post,
     Tag
-)
+]

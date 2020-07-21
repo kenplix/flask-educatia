@@ -1,4 +1,4 @@
-'''
+"""
 
 Defines application extensions to protect against recursive imports.
 
@@ -6,7 +6,7 @@ Author:     Aleksandr Tolstoy <aleksandr13tolstoy@gmail.com>
 Created:    June, 2020
 Modified:   -
 
-'''
+"""
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -32,7 +32,7 @@ admin = Admin(
     index_view=HomeAdminView()
 )
 
-extensions = (
+extensions = [
     db,
     migrate,
     bcrypt,
@@ -40,4 +40,4 @@ extensions = (
     mail,
     ckeditor,
     admin
-)
+]
